@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "teachers": "Find a Teacher",
+    "curriculum": "Curriculum",
+    "islamicStudies": "Islamic Studies",
+    "financialAssistance": "Financial Assistance",
+    "becomeTeacher": "Apply to Teach",
+    "login": "Log In",
+    "register": "Create Account",
+    "dashboard": "Dashboard",
+    "logout": "Log Out"
+  },
+  "hero": {
+    "headline": "Learn. Grow. Excel.",
+    "subheadline": "International academic and Islamic education, taught live online by qualified teachers — wherever your family is in the world.",
+    "exploreCourses": "Explore Courses",
+    "findTeacher": "Find a Teacher",
+    "enrollChild": "Enroll Your Child",
+    "applyTeacher": "Apply as a Teacher"
+  },
+  "footer": {
+    "about": "About",
+    "courses": "Courses",
+    "teachers": "Teachers",
+    "curriculum": "Curriculum",
+    "financialAssistance": "Financial Assistance",
+    "teacherApplication": "Teacher Application",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading…",
+    "viewProfile": "View Profile",
+    "bookClass": "Book Class",
+    "enroll": "Enroll",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next"
+  }
+}

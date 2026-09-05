@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "courses": "الدورات",
+    "teachers": "ابحث عن معلم",
+    "curriculum": "المنهج الدراسي",
+    "islamicStudies": "الدراسات الإسلامية",
+    "financialAssistance": "المساعدة المالية",
+    "becomeTeacher": "التقديم للتدريس",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج"
+  },
+  "hero": {
+    "headline": "تعلّم. تطوّر. تفوّق.",
+    "subheadline": "تعليم أكاديمي وإسلامي دولي، يُقدَّم مباشرة عبر الإنترنت على يد معلمين مؤهلين أينما كانت عائلتك في العالم.",
+    "exploreCourses": "استكشف الدورات",
+    "findTeacher": "ابحث عن معلم",
+    "enrollChild": "سجّل طفلك",
+    "applyTeacher": "قدّم كمعلم"
+  },
+  "footer": {
+    "about": "من نحن",
+    "courses": "الدورات",
+    "teachers": "المعلمون",
+    "curriculum": "المنهج الدراسي",
+    "financialAssistance": "المساعدة المالية",
+    "teacherApplication": "طلب التدريس",
+    "faq": "الأسئلة الشائعة",
+    "contact": "اتصل بنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "rights": "جميع الحقوق محفوظة."
+  },
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "viewProfile": "عرض الملف الشخصي",
+    "bookClass": "احجز حصة",
+    "enroll": "التسجيل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "courses": "Cours",
+    "teachers": "Trouver un enseignant",
+    "curriculum": "Programme",
+    "islamicStudies": "Études islamiques",
+    "financialAssistance": "Aide financière",
+    "becomeTeacher": "Devenir enseignant",
+    "login": "Connexion",
+    "register": "Créer un compte",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion"
+  },
+  "hero": {
+    "headline": "Apprendre. Grandir. Exceller.",
+    "subheadline": "Une éducation académique et islamique internationale, enseignée en direct en ligne par des enseignants qualifiés, où que se trouve votre famille.",
+    "exploreCourses": "Explorer les cours",
+    "findTeacher": "Trouver un enseignant",
+    "enrollChild": "Inscrire votre enfant",
+    "applyTeacher": "Postuler comme enseignant"
+  },
+  "footer": {
+    "about": "À propos",
+    "courses": "Cours",
+    "teachers": "Enseignants",
+    "curriculum": "Programme",
+    "financialAssistance": "Aide financière",
+    "teacherApplication": "Candidature enseignant",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation",
+    "rights": "Tous droits réservés."
+  },
+  "common": {
+    "loading": "Chargement…",
+    "viewProfile": "Voir le profil",
+    "bookClass": "Réserver un cours",
+    "enroll": "S'inscrire",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant"
+  }
+}
