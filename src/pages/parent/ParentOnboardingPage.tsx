@@ -7,8 +7,10 @@ import { Button } from '../../components/ui/Button'
 import { Input, Label, Select, FieldError } from '../../components/ui/Input'
 import { Card, CardBody } from '../../components/ui/Card'
 import { ACADEMIC_LEVELS, COUNTRIES, GRADE_LEVELS, ISLAMIC_LEVELS, LANGUAGES } from '../../lib/constants'
+import { useTranslation } from 'react-i18next'
 
 export function ParentOnboardingPage() {
+  const { t } = useTranslation()
   const { session } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({
@@ -58,8 +60,8 @@ export function ParentOnboardingPage() {
     <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6">
       <div className="mb-6 flex flex-col items-center gap-2 text-center text-brand-800">
         <GraduationCap className="h-9 w-9" />
-        <h1 className="text-xl font-semibold">Add your child</h1>
-        <p className="text-sm text-gray-500">You can add more children anytime from your dashboard.</p>
+        <h1 className="text-xl font-semibold">{t('onboarding.title')}</h1>
+        <p className="text-sm text-gray-500">{t('onboarding.subtitle')}</p>
       </div>
 
       <Card>
@@ -73,32 +75,32 @@ export function ParentOnboardingPage() {
           >
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="firstName">First name</Label>
+                <Label htmlFor="firstName">{t('auth.fields.firstName')}</Label>
                 <Input id="firstName" required value={form.firstName} onChange={update('firstName')} />
               </div>
               <div>
-                <Label htmlFor="lastName">Last name</Label>
+                <Label htmlFor="lastName">{t('auth.fields.lastName')}</Label>
                 <Input id="lastName" required value={form.lastName} onChange={update('lastName')} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="dob">Date of birth</Label>
+                <Label htmlFor="dob">{t('onboarding.dateOfBirth')}</Label>
                 <Input id="dob" type="date" value={form.dateOfBirth} onChange={update('dateOfBirth')} />
               </div>
               <div>
-                <Label htmlFor="gender">Gender</Label>
+                <Label htmlFor="gender">{t('onboarding.gender')}</Label>
                 <Select id="gender" value={form.gender} onChange={update('gender')}>
-                  <option value="female">Female</option>
-                  <option value="male">Male</option>
+                  <option value="female">{t('onboarding.female')}</option>
+                  <option value="male">{t('onboarding.male')}</option>
                 </Select>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="country">Country</Label>
+                <Label htmlFor="country">{t('auth.fields.country')}</Label>
                 <Select id="country" value={form.country} onChange={update('country')}>
                   {COUNTRIES.map((c) => (
                     <option key={c}>{c}</option>
@@ -106,11 +108,11 @@ export function ParentOnboardingPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="grade">Current grade/year</Label>
+                <Label htmlFor="grade">{t('onboarding.currentGrade')}</Label>
                 <Select id="grade" value={form.currentGrade} onChange={update('currentGrade')}>
                   {GRADE_LEVELS.map((g) => (
                     <option key={g} value={g}>
-                      Grade {g}
+                      {t('children.grade', { grade: g })}
                     </option>
                   ))}
                 </Select>
@@ -119,7 +121,7 @@ export function ParentOnboardingPage() {
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="lang">Preferred language</Label>
+                <Label htmlFor="lang">{t('auth.fields.preferredLanguage')}</Label>
                 <Select id="lang" value={form.preferredLanguage} onChange={update('preferredLanguage')}>
                   {LANGUAGES.map((l) => (
                     <option key={l.code} value={l.code}>
@@ -129,7 +131,7 @@ export function ParentOnboardingPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="academicLevel">Academic level</Label>
+                <Label htmlFor="academicLevel">{t('children.academicLevel')}</Label>
                 <Select id="academicLevel" value={form.academicLevel} onChange={update('academicLevel')}>
                   {ACADEMIC_LEVELS.map((l) => (
                     <option key={l}>{l}</option>
@@ -137,7 +139,7 @@ export function ParentOnboardingPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="islamicLevel">Islamic education level</Label>
+                <Label htmlFor="islamicLevel">{t('onboarding.islamicEducationLevel')}</Label>
                 <Select id="islamicLevel" value={form.islamicLevel} onChange={update('islamicLevel')}>
                   {ISLAMIC_LEVELS.map((l) => (
                     <option key={l}>{l}</option>
@@ -150,10 +152,10 @@ export function ParentOnboardingPage() {
 
             <div className="flex gap-3">
               <Button type="button" variant="outline" className="flex-1" loading={loading} onClick={() => submitChild(true)}>
-                Save & Add Another
+                {t('onboarding.saveAddAnother')}
               </Button>
               <Button type="submit" className="flex-1" loading={loading}>
-                Save & Go to Dashboard
+                {t('onboarding.saveDashboard')}
               </Button>
             </div>
           </form>

@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
-export function LoadingState({ label = 'Loading…' }: { label?: string }) {
+export function LoadingState({ label }: { label?: string }) {
+  const { t } = useTranslation()
   return (
     <div className="flex items-center justify-center gap-2 py-16 text-gray-500">
       <span className="h-5 w-5 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
-      <span>{label}</span>
+      <span>{label ?? t('common.loading')}</span>
     </div>
   )
 }

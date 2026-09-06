@@ -1,4 +1,5 @@
 import { Video, BookOpen, ClipboardList, TrendingUp } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { useStudentRecord } from '../../hooks/useStudentRecord'
@@ -7,6 +8,10 @@ import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
 import { LoadingState } from '../../components/ui/States'
 import { browserTimezone, formatDateInZone, formatTimeInZone } from '../../lib/timezone'
+import {
+  DashboardAnnouncements,
+  type DashboardAnnouncement,
+} from '../../components/dashboard/DashboardAnnouncements'
 
 interface EnrollmentWithCourse {
   id: string
@@ -27,6 +32,7 @@ interface AssignmentRow {
 }
 
 export function StudentDashboardPage() {
+  const { t } = useTranslation()
   const { student, loading: studentLoading } = useStudentRecord()
   const localTz = browserTimezone()
 
@@ -55,8 +61,21 @@ export function StudentDashboardPage() {
     [courseIds.join(',')]
   )
 
+  const { data: announcements } = useSupabaseQuery<DashboardAnnouncement[]>(
+    () =>
+      student
+        ? supabase
+            .from('announcements')
+            .select('id, title, body, created_at, courses(title)')
+            .order('created_at', { ascending: false })
+            .limit(5)
+            .returns<DashboardAnnouncement[]>()
+        : Promise.resolve({ data: [], error: null }),
+    [student?.id]
+  )
+
   if (studentLoading) return <LoadingState />
-  if (!student) return <p className="text-sm text-gray-500">Your student profile could not be found.</p>
+  if (!student) return <p className="text-sm text-gray-500">{t('studentDashboard.profileNotFound')}</p>
 
   const upcoming = (classes ?? [])
     .filter((c) => c.classes && new Date(c.classes.start_datetime) > new Date())
@@ -66,30 +85,30 @@ export function StudentDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Welcome back, {student.first_name}!</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('studentDashboard.welcome', { name: student.first_name })}</h1>
 
       {nextClass && (
         <Card className="border-brand-200 bg-brand-50">
           <CardBody className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase text-brand-600">Next Class</p>
+              <p className="text-xs font-semibold uppercase text-brand-600">{t('studentDashboard.nextClass')}</p>
               <p className="text-lg font-semibold text-gray-900">{nextClass.title}</p>
               <p className="text-sm text-gray-600">
                 {formatDateInZone(nextClass.start_datetime, localTz)} · {formatTimeInZone(nextClass.start_datetime, localTz)} ({localTz})
               </p>
             </div>
-            <Button disabled={!canJoinNow}>Join Class</Button>
+            <Button disabled={!canJoinNow}>{t('parentBookings.joinClass')}</Button>
           </CardBody>
         </Card>
       )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard icon={Video} label="Upcoming Classes" value={upcoming.length} />
-        <StatCard icon={BookOpen} label="Active Courses" value={(enrollments ?? []).length} />
-        <StatCard icon={ClipboardList} label="Assignments Due" value={(assignments ?? []).length} />
+        <StatCard icon={Video} label={t('studentDashboard.upcomingClasses')} value={upcoming.length} />
+        <StatCard icon={BookOpen} label={t('studentDashboard.activeCourses')} value={(enrollments ?? []).length} />
+        <StatCard icon={ClipboardList} label={t('studentDashboard.assignmentsDue')} value={(assignments ?? []).length} />
         <StatCard
           icon={TrendingUp}
-          label="Avg. Progress"
+          label={t('studentDashboard.averageProgress')}
           value={
             enrollments?.length
               ? Math.round((enrollments.reduce((s, e) => s + e.progress_percent, 0) / enrollments.length))
@@ -101,14 +120,14 @@ export function StudentDashboardPage() {
 
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">My Courses</h2>
+          <h2 className="font-semibold text-gray-900">{t('dashboard.courses')}</h2>
           <div className="mt-3 space-y-3">
             {(enrollments ?? []).map((e) => (
               <div key={e.id}>
                 <div className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2 font-medium text-gray-800">
                     {e.courses?.title}
-                    {e.courses?.is_islamic && <Badge tone="warning">Islamic</Badge>}
+                    {e.courses?.is_islamic && <Badge tone="warning">{t('courses.islamic')}</Badge>}
                   </span>
                   <span className="text-gray-500">{e.progress_percent}%</span>
                 </div>
@@ -117,14 +136,19 @@ export function StudentDashboardPage() {
                 </div>
               </div>
             ))}
-            {(enrollments ?? []).length === 0 && <p className="text-sm text-gray-500">Not enrolled in any courses yet.</p>}
+            {(enrollments ?? []).length === 0 && <p className="text-sm text-gray-500">{t('studentDashboard.noCourses')}</p>}
           </div>
         </CardBody>
       </Card>
 
+      <DashboardAnnouncements
+        heading={t('teacherCourseEditor.announcements')}
+        announcements={announcements ?? []}
+      />
+
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Assignment Deadlines</h2>
+          <h2 className="font-semibold text-gray-900">{t('studentDashboard.assignmentDeadlines')}</h2>
           <div className="mt-3 space-y-2">
             {(assignments ?? []).map((a) => (
               <div key={a.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm">
@@ -134,7 +158,7 @@ export function StudentDashboardPage() {
                 <span className="text-gray-500">{a.due_date ? new Date(a.due_date).toLocaleDateString() : '—'}</span>
               </div>
             ))}
-            {(assignments ?? []).length === 0 && <p className="text-sm text-gray-500">No pending assignments.</p>}
+            {(assignments ?? []).length === 0 && <p className="text-sm text-gray-500">{t('studentDashboard.noPendingAssignments')}</p>}
           </div>
         </CardBody>
       </Card>

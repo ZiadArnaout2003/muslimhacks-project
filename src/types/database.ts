@@ -1,7 +1,7 @@
 // Hand-written types mirroring supabase/migrations/0001_init_schema.sql.
 // Keep in sync manually, or generate with `supabase gen types typescript`.
 
-export type UserRole = 'parent' | 'student' | 'teacher' | 'admin' | 'scholar'
+export type UserRole = 'student' | 'teacher' | 'admin' | 'scholar'
 export type TeacherStatus = 'pending' | 'approved' | 'rejected' | 'suspended'
 export type ApplicationStatus = 'submitted' | 'under_review' | 'info_requested' | 'approved' | 'rejected'
 export type SubjectCategory = 'academic' | 'islamic'
@@ -41,8 +41,7 @@ export interface Profile {
 
 export interface Student {
   id: string
-  parent_id: string
-  profile_id: string | null
+  profile_id: string
   first_name: string
   last_name: string
   date_of_birth: string | null
@@ -52,6 +51,7 @@ export interface Student {
   preferred_language: string | null
   academic_level: string | null
   islamic_education_level: string | null
+  emergency_guardian_phone: string
   learning_preferences: Record<string, unknown>
   created_at: string
 }
@@ -86,7 +86,6 @@ export interface Subject {
 
 export interface Course {
   id: string
-  teacher_id: string
   subject_id: string
   title: string
   description: string | null
@@ -98,8 +97,27 @@ export interface Course {
   currency: string
   duration_hours: number | null
   cover_image_url: string | null
+  color: string
+  meeting_url: string | null
   status: CourseStatus
   islamic_review_status: IslamicReviewStatus
+  created_at: string
+}
+
+export interface CourseTeacher {
+  course_id: string
+  teacher_id: string
+  assigned_by: string
+  assigned_at: string
+}
+
+export interface Announcement {
+  id: string
+  course_id: string | null
+  title: string
+  body: string
+  audience: string
+  created_by: string | null
   created_at: string
 }
 
@@ -163,8 +181,7 @@ export interface TeacherAvailability {
 
 export interface FinancialAssistanceApplication {
   id: string
-  parent_id: string
-  student_id: string | null
+  student_id: string
   household_size: number | null
   income_range: string | null
   dependents: number | null
@@ -176,8 +193,7 @@ export interface FinancialAssistanceApplication {
 
 export interface Invoice {
   id: string
-  parent_id: string
-  student_id: string | null
+  student_id: string
   description: string
   tier: PaymentTier
   amount: number

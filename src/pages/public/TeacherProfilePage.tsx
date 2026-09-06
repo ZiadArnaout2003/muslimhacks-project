@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Star, MapPin, Clock } from 'lucide-react'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
@@ -12,6 +13,7 @@ import { browserTimezone } from '../../lib/timezone'
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 export function TeacherProfilePage() {
+  const { t } = useTranslation()
   const { teacherId = '' } = useParams()
 
   const { data: rows, loading, error } = useSupabaseQuery<TeacherProfileFull[]>(
@@ -38,7 +40,7 @@ export function TeacherProfilePage() {
 
   if (loading) return <LoadingState label="Loading teacher profile…" />
   if (error) return <ErrorState message={error} />
-  if (!teacher) return <ErrorState message="This teacher could not be found, or is not currently approved." />
+  if (!teacher) return <ErrorState message={t('teacherProfile.notFound')} />
 
   const subjectNames = (subjectLinks ?? [])
     .map((link) => subjects?.find((s) => s.id === link.subject_id)?.name)
@@ -99,7 +101,7 @@ export function TeacherProfilePage() {
                 <div>
                   <p className="text-gray-500">Price</p>
                   <p className="font-medium text-gray-900">
-                    ${teacher.hourly_price} {teacher.currency}/session
+                    {teacher.currency} {teacher.hourly_price}/hour
                   </p>
                 </div>
               </div>
@@ -136,16 +138,11 @@ export function TeacherProfilePage() {
           <Card className="sticky top-24">
             <CardBody className="space-y-3">
               <p className="text-2xl font-bold text-brand-700">
-                ${teacher.hourly_price}
-                <span className="text-sm font-normal text-gray-500"> / session</span>
+                {teacher.currency} {teacher.hourly_price}
+                <span className="text-sm font-normal text-gray-500"> / hour</span>
               </p>
-              <Link to={`/book?teacher=${teacher.id}`}>
-                <Button className="w-full">Book Class</Button>
-              </Link>
-              <Link to={`/book?teacher=${teacher.id}`}>
-                <Button variant="outline" className="w-full">
-                  Select Teacher
-                </Button>
+              <Link to={`/student/book?teacher=${teacher.id}`}>
+                <Button className="w-full">Book Private Lesson</Button>
               </Link>
               <p className="pt-2 text-xs text-gray-400">
                 Personal contact information and identification documents are never shown publicly.

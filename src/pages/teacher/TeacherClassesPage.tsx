@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { useAuth } from '../../contexts/AuthContext'
@@ -26,6 +27,7 @@ interface RosterRow {
 const ATTENDANCE_OPTIONS: AttendanceStatus[] = ['present', 'absent', 'late', 'excused']
 
 export function TeacherClassesPage() {
+  const { t } = useTranslation()
   const { session } = useAuth()
   const teacherId = session?.user.id ?? ''
   const localTz = browserTimezone()
@@ -44,11 +46,11 @@ export function TeacherClassesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">My Classes</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('teacherClasses.title')}</h1>
       </div>
 
-      <Section title="Upcoming Classes" classes={upcoming} localTz={localTz} expandedId={expandedId} setExpandedId={setExpandedId} />
-      <Section title="Past Classes" classes={past} localTz={localTz} expandedId={expandedId} setExpandedId={setExpandedId} showAttendance />
+      <Section title={t('teacherClasses.upcoming')} classes={upcoming} localTz={localTz} expandedId={expandedId} setExpandedId={setExpandedId} />
+      <Section title={t('teacherClasses.past')} classes={past} localTz={localTz} expandedId={expandedId} setExpandedId={setExpandedId} showAttendance />
     </div>
   )
 }
@@ -68,11 +70,12 @@ function Section({
   setExpandedId: (id: string | null) => void
   showAttendance?: boolean
 }) {
+  const { t } = useTranslation()
   return (
     <div>
       <h2 className="font-semibold text-gray-900">{title}</h2>
       <div className="mt-3 space-y-3">
-        {classes.length === 0 && <EmptyState title="Nothing here yet" />}
+        {classes.length === 0 && <EmptyState title={t('teacherClasses.empty')} />}
         {classes.map((c) => (
           <Card key={c.id}>
             <CardBody>
@@ -101,6 +104,7 @@ function Section({
 }
 
 function Roster({ classId, showAttendance }: { classId: string; showAttendance?: boolean }) {
+  const { t } = useTranslation()
   const { data: roster, loading } = useSupabaseQuery<RosterRow[]>(
     () => supabase.from('class_students').select('student_id, students(first_name, last_name)').eq('class_id', classId).returns<RosterRow[]>(),
     [classId]
@@ -136,17 +140,17 @@ function Roster({ classId, showAttendance }: { classId: string; showAttendance?:
                       current === opt ? 'border-brand-600 bg-brand-600 text-white' : 'border-gray-200 text-gray-500'
                     }`}
                   >
-                    {opt}
+                    {t(`teacherClasses.attendance.${opt}`)}
                   </button>
                 ))}
               </div>
             ) : (
-              current && <Badge tone="neutral">{current}</Badge>
+              current && <Badge tone="neutral">{t(`teacherClasses.attendance.${current}`)}</Badge>
             )}
           </div>
         )
       })}
-      {(roster ?? []).length === 0 && <p className="text-sm text-gray-500">No students booked yet.</p>}
+      {(roster ?? []).length === 0 && <p className="text-sm text-gray-500">{t('teacherClasses.noStudents')}</p>}
     </div>
   )
 }

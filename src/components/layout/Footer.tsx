@@ -30,7 +30,7 @@ export function Footer() {
       ],
     },
     {
-      heading: 'Legal',
+      heading: t('footer.legal'),
       links: [
         { to: '/privacy', label: t('footer.privacy') },
         { to: '/terms', label: t('footer.terms') },
@@ -48,8 +48,7 @@ export function Footer() {
               <span>Al-Noor International School</span>
             </div>
             <p className="max-w-md text-sm text-brand-200">
-              Accessible academic and Islamic education through qualified teachers, flexible online learning,
-              and financial assistance for students who need it.
+              {t('footer.description')}
             </p>
           </div>
           {columns.map((col) => (

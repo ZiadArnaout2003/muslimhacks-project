@@ -4,33 +4,38 @@ import { fromZonedTime } from 'date-fns-tz'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { useAuth } from '../../contexts/AuthContext'
+import { useStudentRecord } from '../../hooks/useStudentRecord'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Input, Label, Select, FieldError } from '../../components/ui/Input'
 import { LoadingState } from '../../components/ui/States'
 import { browserTimezone } from '../../lib/timezone'
-import type { Student, Subject, TeacherProfileFull } from '../../types/database'
+import type { Subject, TeacherProfileFull } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 const DURATIONS = [30, 45, 60, 90]
 
+interface TeacherSubjectRow {
+  teacher_id: string
+  subject_id: string
+  grade_levels: string[] | null
+}
+
 export function BookingPage() {
+  const { t } = useTranslation()
   const { session } = useAuth()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const preselectedTeacher = params.get('teacher') ?? ''
 
-  const { data: children } = useSupabaseQuery<Student[]>(
-    () => supabase.from('students').select('*').eq('parent_id', session?.user.id ?? ''),
-    [session?.user.id]
-  )
+  const { student, loading: studentLoading } = useStudentRecord()
   const { data: teachers } = useSupabaseQuery<TeacherProfileFull[]>(() => supabase.rpc('public_teacher_cards'), [])
   const { data: subjects } = useSupabaseQuery<Subject[]>(() => supabase.from('subjects').select('*').order('name'), [])
-  const { data: teacherSubjects } = useSupabaseQuery<{ teacher_id: string; subject_id: string }[]>(
-    () => supabase.from('teacher_subjects').select('teacher_id, subject_id'),
+  const { data: teacherSubjects } = useSupabaseQuery<TeacherSubjectRow[]>(
+    () => supabase.from('teacher_subjects').select('teacher_id, subject_id, grade_levels'),
     []
   )
 
-  const [studentId, setStudentId] = useState('')
   const [teacherId, setTeacherId] = useState(preselectedTeacher)
   const [subjectId, setSubjectId] = useState('')
   const [date, setDate] = useState('')
@@ -40,19 +45,50 @@ export function BookingPage() {
   const [loading, setLoading] = useState(false)
 
   const localTz = browserTimezone()
+  const studentGrade = student?.current_grade ?? ''
   const teacher = teachers?.find((t) => t.id === teacherId)
+  const lessonPrice = ((teacher?.hourly_price ?? 0) * duration) / 60
   const availableSubjects = useMemo(
     () =>
-      (teacherSubjects ?? [])
-        .filter((ts) => ts.teacher_id === teacherId)
-        .map((ts) => subjects?.find((s) => s.id === ts.subject_id))
-        .filter(Boolean) as Subject[],
-    [teacherSubjects, subjects, teacherId]
+      (subjects ?? []).filter((subject) =>
+        (teacherSubjects ?? []).some(
+          (teacherSubject) =>
+            Boolean(studentGrade) &&
+            teacherSubject.subject_id === subject.id &&
+            teacherSubject.grade_levels?.includes(studentGrade)
+        )
+      ),
+    [subjects, teacherSubjects, studentGrade]
+  )
+  const availableTeachers = useMemo(
+    () => {
+      const teacherIds = new Set(
+        (teacherSubjects ?? [])
+          .filter(
+            (teacherSubject) =>
+              teacherSubject.grade_levels?.includes(studentGrade) &&
+              (!subjectId || teacherSubject.subject_id === subjectId)
+          )
+          .map((teacherSubject) => teacherSubject.teacher_id)
+      )
+      return (teachers ?? []).filter((availableTeacher) => teacherIds.has(availableTeacher.id))
+    },
+    [teachers, teacherSubjects, studentGrade, subjectId]
   )
 
   const handleConfirm = async () => {
-    if (!session || !studentId || !teacherId || !subjectId || !date || !time) {
-      setError('Please complete every field before confirming.')
+    if (!session || !student || !teacherId || !subjectId || !date || !time) {
+      setError(t('booking.errors.completeFields'))
+      return
+    }
+    const isGradeMatched = (teacherSubjects ?? []).some(
+      (teacherSubject) =>
+        teacherSubject.teacher_id === teacherId &&
+        teacherSubject.subject_id === subjectId &&
+        teacherSubject.grade_levels?.includes(studentGrade)
+    )
+    if (!studentGrade || !isGradeMatched) {
+      setError(t('booking.errors.levelMatch'))
       return
     }
     setError(null)
@@ -60,123 +96,129 @@ export function BookingPage() {
 
     const startUtc = fromZonedTime(`${date}T${time}:00`, localTz)
     const endUtc = new Date(startUtc.getTime() + duration * 60000)
-    const subjectName = subjects?.find((s) => s.id === subjectId)?.name ?? 'Class'
-
-    const { data: cls, error: classError } = await supabase
-      .from('classes')
-      .insert({
-        subject_id: subjectId,
-        teacher_id: teacherId,
-        title: `${subjectName} with ${teacher?.first_name} ${teacher?.last_name}`,
-        start_datetime: startUtc.toISOString(),
-        end_datetime: endUtc.toISOString(),
-        timezone: localTz,
-        provider: 'zoom',
-        status: 'scheduled',
-        cancellation_policy: 'Free cancellation up to 24 hours before the class.',
-        created_by: session.user.id,
-      })
-      .select()
-      .single()
-
-    if (classError) {
-      setLoading(false)
-      if (classError.message.includes('exclude') || classError.code === '23P01') {
-        setError('This teacher already has a class scheduled at that time. Please choose another slot.')
-      } else {
-        setError(classError.message)
-      }
-      return
-    }
-
-    const { error: bookingError } = await supabase.from('class_students').insert({
-      class_id: cls.id,
-      student_id: studentId,
-      booked_by: session.user.id,
-      price_charged: teacher?.hourly_price ?? 0,
+    const { error: bookingError } = await supabase.rpc('book_private_lesson', {
+      p_teacher_id: teacherId,
+      p_subject_id: subjectId,
+      p_start_datetime: startUtc.toISOString(),
+      p_end_datetime: endUtc.toISOString(),
+      p_timezone: localTz,
     })
 
     if (bookingError) {
       setLoading(false)
-      setError(bookingError.message)
+      if (bookingError.message.includes('exclude') || bookingError.code === '23P01') {
+        setError(t('booking.errors.conflict'))
+      } else {
+        setError(bookingError.message)
+      }
       return
     }
 
-    await supabase.from('invoices').insert({
-      parent_id: session.user.id,
-      student_id: studentId,
-      description: `${subjectName} class with ${teacher?.first_name} ${teacher?.last_name}`,
-      tier: 'standard',
-      amount: teacher?.hourly_price ?? 0,
-      discount_amount: 0,
-      final_amount: teacher?.hourly_price ?? 0,
-      status: 'pending',
-    })
-
     setLoading(false)
-    navigate('/parent/bookings', { state: { justBooked: true } })
+    navigate('/student/bookings', { state: { justBooked: true } })
   }
 
-  if (!children) return <LoadingState />
+  if (studentLoading) return <LoadingState />
+  if (!student) return <FieldError>Unable to load your student profile.</FieldError>
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900">Book a Class</h1>
-      <p className="mt-1 text-sm text-gray-500">Times are shown in your local timezone ({localTz}).</p>
+      <h1 className="text-2xl font-bold text-gray-900">{t('booking.title')}</h1>
+      <p className="mt-1 text-sm text-gray-500">{t('booking.timezone', { timezone: localTz })}</p>
 
       <Card className="mt-6">
         <CardBody className="space-y-4">
-          <div>
-            <Label htmlFor="student">Student</Label>
-            <Select id="student" value={studentId} onChange={(e) => setStudentId(e.target.value)}>
-              <option value="">Select a child</option>
-              {children.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.first_name} {c.last_name}
-                </option>
-              ))}
-            </Select>
+          <div className="rounded-lg bg-brand-50 p-4 text-sm text-brand-800">
+            <p className="font-medium">
+              {t('booking.levelMatching', { name: student.first_name, grade: studentGrade || t('booking.notSet') })}
+              {student.academic_level ? ` · ${student.academic_level}` : ''}
+            </p>
+            <p className="mt-1 text-xs text-brand-700">{t('booking.levelMatchingDescription')}</p>
           </div>
+          {!studentGrade && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              {t('booking.noGrade')}
+            </div>
+          )}
 
           <div>
-            <Label htmlFor="teacher">Teacher</Label>
-            <Select id="teacher" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
-              <option value="">Select a teacher</option>
-              {(teachers ?? []).map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.first_name} {t.last_name} — ${t.hourly_price}/hr
-                </option>
-              ))}
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="subject">Subject</Label>
-            <Select id="subject" value={subjectId} onChange={(e) => setSubjectId(e.target.value)} disabled={!teacherId}>
-              <option value="">Select a subject</option>
+            <Label htmlFor="subject">{t('booking.subject')}</Label>
+            <Select
+              id="subject"
+              value={subjectId}
+              onChange={(e) => {
+                const nextSubjectId = e.target.value
+                setSubjectId(nextSubjectId)
+                setTeacherId((currentTeacherId) =>
+                  (teacherSubjects ?? []).some(
+                    (teacherSubject) =>
+                      teacherSubject.teacher_id === currentTeacherId &&
+                      teacherSubject.subject_id === nextSubjectId &&
+                      teacherSubject.grade_levels?.includes(studentGrade)
+                  )
+                    ? currentTeacherId
+                    : ''
+                )
+                setError(null)
+              }}
+              disabled={!studentGrade}
+            >
+              <option value="">{studentGrade ? t('booking.selectSubject') : t('booking.noGrade')}</option>
               {availableSubjects.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
                 </option>
               ))}
             </Select>
+            {studentGrade && availableSubjects.length === 0 && (
+              <p className="mt-1 text-xs text-amber-700">
+                {t('booking.noSubjects', { grade: studentGrade })}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="teacher">{t('booking.teacher')}</Label>
+            <Select
+              id="teacher"
+              value={teacherId}
+              onChange={(e) => {
+                setTeacherId(e.target.value)
+                setError(null)
+              }}
+              disabled={!studentGrade || !subjectId}
+            >
+              <option value="">
+                  {subjectId ? t('booking.selectTeacher') : t('booking.selectSubjectFirst')}
+              </option>
+              {availableTeachers.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.first_name} {t.last_name} — {t.currency} {t.hourly_price}/hr
+                </option>
+              ))}
+            </Select>
+            {subjectId && availableTeachers.length === 0 && (
+              <p className="mt-1 text-xs text-amber-700">
+                {t('booking.noTeachers', { grade: studentGrade })}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <Label htmlFor="date">Date</Label>
+              <Label htmlFor="date">{t('booking.date')}</Label>
               <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="time">Time</Label>
+              <Label htmlFor="time">{t('booking.time')}</Label>
               <Input id="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="duration">Duration</Label>
+              <Label htmlFor="duration">{t('booking.duration')}</Label>
               <Select id="duration" value={duration} onChange={(e) => setDuration(Number(e.target.value))}>
                 {DURATIONS.map((d) => (
                   <option key={d} value={d}>
-                    {d} min
+                    {t('booking.minutes', { count: d })}
                   </option>
                 ))}
               </Select>
@@ -186,16 +228,16 @@ export function BookingPage() {
           {teacher && (
             <div className="rounded-lg bg-brand-50 p-4 text-sm text-brand-800">
               <p>
-                Price: <strong>${teacher.hourly_price}</strong> per session
+                {t('booking.price', { price: lessonPrice.toFixed(2) })} {teacher.currency}
               </p>
-              <p className="mt-1 text-xs text-brand-600">Cancellation policy: free cancellation up to 24 hours before the class.</p>
+              <p className="mt-1 text-xs text-brand-600">{t('booking.cancellation')}</p>
             </div>
           )}
 
           <FieldError>{error}</FieldError>
 
           <Button className="w-full" loading={loading} onClick={handleConfirm}>
-            Confirm Booking
+            {t('booking.confirm')}
           </Button>
         </CardBody>
       </Card>

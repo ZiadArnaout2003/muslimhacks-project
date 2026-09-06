@@ -2,7 +2,7 @@
   "nav": {
     "home": "Accueil",
     "courses": "Cours",
-    "teachers": "Trouver un enseignant",
+    "teachers": "Réserver un cours particulier avec un enseignant",
     "curriculum": "Programme",
     "islamicStudies": "Études islamiques",
     "financialAssistance": "Aide financière",
@@ -10,13 +10,14 @@
     "login": "Connexion",
     "register": "Créer un compte",
     "dashboard": "Tableau de bord",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "toggleMenu": "Afficher/masquer le menu"
   },
   "hero": {
     "headline": "Apprendre. Grandir. Exceller.",
     "subheadline": "Une éducation académique et islamique internationale, enseignée en direct en ligne par des enseignants qualifiés, où que se trouve votre famille.",
     "exploreCourses": "Explorer les cours",
-    "findTeacher": "Trouver un enseignant",
+    "findTeacher": "Réserver un cours particulier avec un enseignant",
     "enrollChild": "Inscrire votre enfant",
     "applyTeacher": "Postuler comme enseignant"
   },
@@ -31,7 +32,9 @@
     "contact": "Contact",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation",
-    "rights": "Tous droits réservés."
+    "rights": "Tous droits réservés.",
+    "legal": "Mentions légales",
+    "description": "Une éducation académique et islamique accessible grâce à des enseignants qualifiés, un apprentissage en ligne flexible et une aide financière."
   },
   "common": {
     "loading": "Chargement…",
@@ -39,9 +42,147 @@
     "bookClass": "Réserver un cours",
     "enroll": "S'inscrire",
     "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
     "cancel": "Annuler",
     "submit": "Soumettre",
     "back": "Retour",
-    "next": "Suivant"
-  }
+    "next": "Suivant",
+    "placeholderNote": "Cette zone dispose de la structure, de la mise en page et du contrôle d'accès, mais la fonctionnalité complète sera développée ultérieurement."
+  },
+  "dashboard": {"overview": "Vue d'ensemble", "children": "Mes enfants", "bookings": "Réservations et horaires", "payments": "Paiements et factures", "messages": "Messages", "settings": "Paramètres", "courses": "Mes cours", "assignments": "Devoirs", "progress": "Progrès", "signedInAs": "Connecté en tant que", "notifications": "Notifications", "roles": {"parent": "Parent", "student": "Élève", "teacher": "Enseignant", "admin": "Administrateur", "scholar": "Érudit"}},
+  "home": {"why": {"title": "Pourquoi les familles nous choisissent", "items": [{"title": "Enseignants qualifiés", "description": "Chaque enseignant est vérifié et ses qualifications sont examinées avant d'enseigner."}, {"title": "Programme international", "description": "Structuré selon des normes internationales reconnues."}, {"title": "Éducation islamique", "description": "Coran, croyance, jurisprudence et biographie prophétique, avec supervision savante."}, {"title": "Cours en direct", "description": "Des séances interactives et des leçons enregistrées à revoir à tout moment."}, {"title": "Aide financière", "description": "Les familles ne pouvant pas payer la totalité des frais peuvent demander une aide."}]}, "subjects": {"title": "Matières enseignées"}, "stepsTitle": "Comment cela fonctionne", "steps": ["Créer un compte", "Ajouter votre enfant", "S'inscrire et commencer à apprendre"], "assistance": {"title": "Aide financière disponible", "description": "Aucun élève ne devrait manquer une éducation de qualité à cause du coût. Les familles peuvent demander une aide partielle ou complète.", "action": "En savoir plus sur l'aide financière"}, "featured": {"title": "Cours enregistrés à la une", "viewAll": "Voir tout", "viewCourse": "Voir le cours", "empty": "Aucun cours enregistré publié."}, "teacher": {"title": "Vous êtes un enseignant qualifié ?", "description": "Rejoignez une communauté mondiale d'éducateurs académiques et islamiques."}, "testimonialsTitle": "Ce que disent les familles"},
+  "homeTestimonials": [{"role": "Parent, Toronto", "quote": "L'enseignant de Coran de mon fils est patient et attentionné. Les horaires adaptés à notre fuseau ont tout facilité."}, {"role": "Parent, Londres", "quote": "La demande d'aide financière a été respectueuse et rapide. Ma fille ne s'est jamais sentie mise à l'écart."}, {"role": "Élève, niveau 10", "quote": "J'aime pouvoir revoir mes cours de physique avant les quiz. Mes résultats se sont vraiment améliorés."}],
+  "payments": {"title": "Paiements et factures", "empty": "Aucune facture", "description": "Description", "date": "Date", "amount": "Montant", "status": "Statut", "download": "Télécharger", "statuses": {"draft": "Brouillon", "pending": "En attente", "paid": "Payée", "overdue": "En retard", "void": "Annulée", "refunded": "Remboursée"}},
+  "children": {"add": "Ajouter un enfant", "grade": "Niveau {{grade}}", "academicLevel": "Niveau académique", "islamicEducation": "Éducation islamique"},
+  "courses": {"islamic": "Islamique", "academic": "Académique", "complete": "{{percent}} % terminé", "continueLearning": "Continuer l'apprentissage", "empty": "Aucun cours", "emptyDescription": "Parcourez le catalogue pour vous inscrire."},
+  "teacherCourses": {"title": "Mes cours attribués", "subtitle": "Gérez les supports des cours qui vous sont attribués par l'administration.", "empty": "Aucun cours ne vous a été attribué", "allLevels": "Tous les niveaux"},
+  "teacherNav": {"classes": "Mes cours", "courses": "Mes cours attribués", "availability": "Disponibilités", "applicationStatus": "Statut de la candidature", "teachers": "Enseignants", "students": "Élèves", "schedule": "Horaires", "reports": "Rapports"},
+  "studentInvite": {"create": "Créer un compte élève", "linked": "Connexion élève activée", "codeLabel": "Code d’invitation de l’élève", "openRegistration": "Ouvrir l’inscription élève", "expires": "Ce code à usage unique expire dans 24 heures."},
+  "studentRegister": {"title": "Créer votre compte élève", "subtitle": "Utilisez le code d’invitation fourni par votre parent.", "code": "Code d’invitation", "create": "Créer le compte élève", "success": "Compte élève créé. Confirmez l’e-mail si nécessaire, puis connectez-vous.", "haveInvite": "Vous avez un code d’invitation élève ?"},
+  "teacherCourseEditor": {"notAssigned": "Ce cours est indisponible ou ne vous est pas attribué.", "subtitle": "Ajoutez des supports et communiquez avec les élèves inscrits.", "meeting": "Réunion du cours", "currentMeeting": "Ouvrir le lien de réunion actuel", "meetingPlaceholder": "URL de réunion", "modules": "Modules et leçons", "moduleTitle": "Titre du nouveau module", "addModule": "Ajouter un module", "addLesson": "Ajouter une leçon", "selectModule": "Sélectionner un module", "text": "Texte", "video": "Vidéo", "link": "Lien", "lessonTitle": "Titre de la leçon", "lessonContent": "Contenu de la leçon", "url": "URL", "announcements": "Annonces", "announcementPlaceholder": "Rédiger une annonce de cours", "postAnnouncement": "Publier l'annonce"},
+  "adminStudents": {"title": "Gestion des élèves", "search": "Rechercher des élèves…", "empty": "Aucun élève trouvé", "student": "Élève", "grade": "Niveau", "parent": "Parent"},
+  "settings": {"title": "Paramètres du compte", "phone": "Téléphone", "language": "Langue", "timezone": "Fuseau horaire", "saved": "Enregistré.", "saveChanges": "Enregistrer les modifications"},
+  "booking": {"title": "Réserver un cours particulier", "timezone": "Les horaires sont affichés dans votre fuseau horaire local ({{timezone}}).", "student": "Élève", "selectChild": "Sélectionner un enfant", "addChild": "Ajoutez un enfant à votre profil avant de réserver un cours particulier complémentaire.", "levelMatching": "Correspondance de niveau pour {{name}} : niveau {{grade}}", "notSet": "non renseigné", "levelMatchingDescription": "Le programme scolaire est fixe. Les cours particuliers sont complémentaires et adaptés au niveau scolaire de votre enfant.", "noGrade": "Le niveau scolaire actuel de cet enfant n'est pas renseigné. Mettez son profil à jour avant de réserver un cours adapté.", "subject": "Matière", "selectSubject": "Sélectionner une matière adaptée au niveau", "selectChildFirst": "Sélectionnez d'abord un enfant", "noSubjects": "Aucune matière complémentaire n'a actuellement d'enseignant approuvé pour le niveau {{grade}}.", "teacher": "Enseignant", "selectTeacher": "Sélectionner un enseignant approuvé et adapté au niveau", "selectSubjectFirst": "Sélectionnez d'abord une matière", "noTeachers": "Aucun enseignant approuvé ne correspond à cette matière au niveau {{grade}}. Choisissez une autre matière ou réessayez plus tard.", "date": "Date", "time": "Heure", "duration": "Durée", "minutes": "{{count}} min", "price": "Prix : ${{price}} par séance", "cancellation": "Politique d'annulation : annulation gratuite jusqu'à 24 heures avant le cours.", "confirm": "Confirmer la réservation", "errors": {"completeFields": "Veuillez remplir tous les champs avant de confirmer.", "levelMatch": "Veuillez choisir une matière et un enseignant adaptés au niveau de cet enfant.", "conflict": "Cet enseignant a déjà un cours prévu à cette heure. Veuillez choisir un autre créneau."}},
+  "auth": {
+    "fields": {"emailOrUsername": "E-mail ou nom d'utilisateur", "email": "E-mail", "password": "Mot de passe", "firstName": "Prénom", "lastName": "Nom", "phone": "Numéro de téléphone", "emergencyGuardianPhone": "Téléphone d'urgence du parent/tuteur", "country": "Pays", "grade": "Niveau scolaire", "academicLevel": "Niveau académique", "islamicEducationLevel": "Niveau d'éducation islamique", "preferredLanguage": "Langue préférée"},
+    "errors": {"passwordLength": "Le mot de passe doit contenir au moins 8 caractères.", "emailRateLimit": "Trop d’e-mails ont été demandés. Veuillez patienter quelques minutes avant de réessayer.", "generic": "Impossible de terminer l’authentification. Veuillez réessayer."},
+    "login": {"welcome": "Bon retour", "subtitle": "Connectez-vous à votre compte étudiant Al-Noor", "remember": "Se souvenir de moi", "forgot": "Mot de passe oublié ?", "newHere": "Nouveau ici ?", "createStudent": "Créer un compte étudiant"},
+    "register": {"title": "Créez votre compte étudiant", "subtitle": "Préparez votre profil d'apprentissage pour vous inscrire et réserver des cours.", "existing": "Vous avez déjà un compte ?", "checkEmail": "Compte créé. Consultez votre e-mail pour le confirmer, puis connectez-vous."},
+    "forgot": {"title": "Réinitialiser votre mot de passe", "sent": "Si un compte existe pour {{email}}, un lien de réinitialisation lui a été envoyé.", "action": "Envoyer le lien", "back": "Retour à la connexion"}
+  },
+  "public": {
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": [
+        {"question": "Comment fonctionnent les cours en direct ?", "answer": "Les cours se déroulent par visioconférence. Un bouton Rejoindre le cours apparaît sur votre tableau de bord lorsqu'un cours est disponible."},
+        {"question": "Puis-je choisir l'enseignant de mon enfant ?", "answer": "Oui. Recherchez et filtrez les enseignants par matière, niveau, langue, genre, tarif et disponibilité, puis consultez leur profil avant de réserver."},
+        {"question": "Et si nous ne pouvons pas payer la totalité des frais ?", "answer": "Vous pouvez demander une aide financière à tout moment. Les demandes sont étudiées individuellement et de manière confidentielle."},
+        {"question": "Le programme est-il reconnu partout ?", "answer": "Nos programmes suivent des normes internationales reconnues. La reconnaissance varie selon l'établissement et le pays."},
+        {"question": "Comment les enseignants sont-ils vérifiés ?", "answer": "Chaque enseignant soumet ses qualifications, certificats et CV avant approbation. Les documents ne sont jamais publics."},
+        {"question": "Comment le contenu islamique est-il examiné ?", "answer": "Les cours et supports islamiques sont examinés par un érudit ou évaluateur islamique qualifié avant publication."}
+      ]
+    },
+    "pricing": {"title": "Frais de scolarité et options de paiement", "intro": "Nous proposons des niveaux de frais flexibles afin que le coût ne soit jamais un obstacle. Le niveau de frais d'une famille reste privé entre elle et l'école.", "tiers": [{"name": "Standard", "price": "Frais complets", "description": "Frais complets définis par enseignant ou cours.", "features": ["Accès complet aux cours réservés", "Tous les supports de cours", "Suivi des progrès"]}, {"name": "Soutenu", "price": "Réduit", "description": "Un tarif réduit pour les élèves admissibles, déterminé au cas par cas.", "features": ["Même accès que le niveau Standard", "Tarif réduit appliqué automatiquement au paiement"]}, {"name": "Parrainé", "price": "Financé par un parrain", "description": "Frais partiellement ou totalement couverts par un programme de parrainage.", "features": ["Même accès que le niveau Standard", "Financé par les programmes de parrainage de l'école"]}], "assistanceTitle": "Vous ne pouvez pas payer les frais maintenant ?", "assistanceDescription": "Demandez une aide financière : chaque demande est étudiée individuellement.", "assistanceAction": "En savoir plus sur l'aide financière"},
+    "assistance": {"title": "Aide financière", "intro": "Aucun élève ne devrait être privé d'une éducation de qualité parce que sa famille ne peut pas payer la totalité des frais. Les familles peuvent demander une réduction partielle ou une exonération totale. Chaque demande est examinée individuellement et confidentiellement.", "cards": {"apply": {"title": "Faire une demande", "description": "Parlez-nous de la situation de votre foyer. Nous demandons seulement les informations nécessaires à l'évaluation."}, "private": {"title": "Examen confidentiel", "description": "Un administrateur étudie votre dossier individuellement. Votre famille n'est jamais identifiée publiquement par sa situation financière."}, "reduced": {"title": "Frais réduits", "description": "Si votre demande est approuvée, le montant réduit est appliqué automatiquement au paiement."}}, "readyTitle": "Prêt à faire une demande ?", "readyDescription": "Vous aurez d'abord besoin d'un compte parent afin que nous puissions lier la demande à l'inscription de votre enfant.", "applyAction": "Demander une aide", "accountAction": "Créer d'abord un compte"},
+    "static": {"about": {"title": "À propos de l'école internationale Al-Noor", "first": "Al-Noor International School est une école islamique internationale en ligne offrant un enseignement académique et islamique transférable à l'international, dispensé en direct par des enseignants qualifiés et vérifiés.", "second": "Notre philosophie consiste à offrir une éducation académique et islamique accessible et de qualité grâce à des enseignants qualifiés, un apprentissage en ligne flexible, des programmes transférables et une aide financière."}, "contact": {"title": "Nous contacter", "body": "Une question sur l'inscription, l'enseignement ou l'aide financière ? Contactez notre équipe des admissions.", "email": "E-mail : admissions@alnoor.school"}, "privacy": {"title": "Politique de confidentialité", "first": "Nous recueillons uniquement les informations nécessaires au fonctionnement de la plateforme : détails du compte, inscriptions, horaires et informations d'aide financière que vous choisissez de partager.", "second": "Les coordonnées et informations financières des élèves ne sont jamais publiques. Les documents d'identification des enseignants ne sont visibles que par les administrateurs autorisés. Les parents ne voient que les informations de leurs enfants."}, "terms": {"title": "Conditions d'utilisation", "body": "En utilisant cette plateforme, vous acceptez de l'utiliser avec respect, de protéger vos identifiants et de fournir des informations exactes lors de l'inscription, des candidatures d'enseignant et des demandes d'aide financière."}}
+  },
+  "onboarding": {
+    "title": "Ajouter votre enfant",
+    "subtitle": "Vous pourrez ajouter d'autres enfants à tout moment depuis votre tableau de bord.",
+    "dateOfBirth": "Date de naissance",
+    "gender": "Genre",
+    "female": "Féminin",
+    "male": "Masculin",
+    "currentGrade": "Niveau/année actuel",
+    "islamicEducationLevel": "Niveau d'éducation islamique",
+    "saveAddAnother": "Enregistrer et ajouter un autre enfant",
+    "saveDashboard": "Enregistrer et aller au tableau de bord"
+  },
+  "teacherAvailability": {
+    "title": "Disponibilités",
+    "subtitle": "Les parents verront ces horaires automatiquement convertis dans leur propre fuseau horaire.",
+    "weeklySlots": "Créneaux hebdomadaires",
+    "empty": "Aucune disponibilité définie.",
+    "addSlot": "Ajouter un créneau",
+    "removeSlot": "Supprimer le créneau de disponibilité",
+    "approvalRequired": "Votre compte enseignant doit être approuvé avant de publier vos disponibilités.",
+    "days": ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"]
+  },
+  "admin": {
+    "dashboard": "Tableau de bord administrateur",
+    "loadingStatistics": "Chargement des statistiques de l'école…",
+    "totalStudents": "Nombre total d'élèves",
+    "activeTeachers": "Enseignants actifs",
+    "pendingApplications": "Candidatures en attente",
+    "activeCourses": "Cours actifs",
+    "upcomingClasses": "Cours à venir",
+    "revenuePaid": "Recettes encaissées",
+    "assistanceCasesOpen": "Dossiers d'aide ouverts",
+    "totalEnrollments": "Nombre total d'inscriptions",
+    "courseManagement": "Gestion des cours",
+    "courseRequiredFields": "Sélectionnez une matière et saisissez un titre de cours.",
+    "courseColor": "Couleur du cours",
+    "deleteCourseConfirm": "Supprimer « {{title}} » ? Ses leçons, devoirs et inscriptions seront également supprimés.",
+    "noCourses": "Aucun cours",
+    "course": "Cours",
+    "status": "Statut",
+    "islamicReview": "Examen islamique",
+    "unpublish": "Dépublier",
+    "approvePublish": "Approuver et publier",
+    "scheduleManagement": "Gestion des horaires",
+    "localTimezone": "Tous les horaires sont affichés dans votre fuseau horaire local ({{timezone}}).",
+    "noClasses": "Aucun cours planifié",
+    "class": "Cours",
+    "teacher": "Enseignant",
+    "when": "Horaire",
+    "courseStatuses": {"published": "Publié", "unpublished": "Non publié", "draft": "Brouillon", "archived": "Archivé"},
+    "reviewStatuses": {"approved": "Approuvé", "pending": "En attente", "rejected": "Rejeté", "not_required": "Non requis"},
+    "classStatuses": {"scheduled": "Planifié", "cancelled": "Annulé", "completed": "Terminé", "rescheduled": "Reprogrammé"},
+    "assistanceManagement": "Gestion de l'aide financière",
+    "noApplications": "Aucune demande",
+    "parent": "Parent",
+    "close": "Fermer",
+    "review": "Examiner",
+    "householdSize": "Taille du foyer",
+    "dependents": "Personnes à charge",
+    "incomeRange": "Tranche de revenus",
+    "reason": "Motif",
+    "internalNote": "Note interne (non visible par la famille)",
+    "percentReduction": "% de réduction",
+    "approvePartial": "Approuver partiellement",
+    "approveFull": "Approuver intégralement",
+    "scheduleInterview": "Planifier un entretien",
+    "reject": "Rejeter",
+    "assistanceStatuses": {"submitted": "Soumise", "under_review": "En cours d'examen", "interview_scheduled": "Entretien planifié", "info_required": "Informations requises", "approved": "Approuvée", "partially_approved": "Partiellement approuvée", "rejected": "Rejetée"},
+    "unknown": "Inconnu",
+    "reports": "Rapports",
+    "exportInvoices": "Exporter les factures (CSV)",
+    "enrollmentByCourse": "Inscriptions par cours",
+    "revenueSummary": "Résumé des recettes",
+    "totalCollected": "Total encaissé sur {{count}} factures payées"
+    ,"teacherManagement": "Gestion des enseignants", "tabs": {"applications": "Candidatures", "teachers": "Enseignants"}, "name": "Nom", "email": "E-mail", "subjects": "Matières", "grades": "Niveaux", "experience": "Expérience", "languages": "Langues", "years": "{{count}} ans", "messageApplicant": "Message au candidat (facultatif)", "approve": "Approuver", "requestInfo": "Demander plus d'informations", "reinstate": "Réintégrer", "suspend": "Suspendre",
+    "applicationStatuses": {"submitted": "Soumise", "under_review": "En cours d'examen", "info_requested": "Informations demandées", "approved": "Approuvée", "rejected": "Rejetée"},
+    "teacherStatuses": {"pending": "En attente", "approved": "Approuvé", "rejected": "Rejeté", "suspended": "Suspendu"}
+  },
+  "catalogue": {"title": "Catalogue des cours", "subtitle": "Cours académiques et islamiques, en direct ou enregistrés.", "allSubjects": "Toutes les matières", "allCategories": "Académique et islamique", "academicOnly": "Académique uniquement", "islamicOnly": "Islamique uniquement", "allModes": "Direct et enregistrés", "loading": "Chargement des cours…", "empty": "Aucun cours ne correspond à vos filtres", "modes": {"live": "En direct", "recorded": "Enregistré", "hybrid": "Hybride"}},
+  "checkout": {"title": "Paiement", "courseNotFound": "Cours introuvable.", "selectStudentError": "Veuillez sélectionner un élève.", "alreadyEnrolled": "Cet élève est déjà inscrit à ce cours.", "course": "Cours", "price": "Prix", "assistance": "Aide financière ({{percent}} %)", "totalDue": "Total dû", "demoNote": "Paiement de démonstration : aucun prélèvement réel n'est effectué. En production, le paiement serait traité par un prestataire comme Stripe au lieu de stocker directement les données de carte.", "confirmEnrollment": "Confirmer l'inscription"}
+  ,"teacherSearch": {"title": "Trouver un enseignant", "subtitle": "Filtrez par matière, niveau, langue et plus encore.", "subject": "Matière", "grade": "Niveau", "language": "Langue", "gender": "Genre de l'enseignant", "maxPrice": "Prix maximum", "allSubjects": "Toutes les matières", "allGrades": "Tous les niveaux", "allLanguages": "Toutes les langues", "anyGender": "Tout genre", "anyPrice": "Tout prix", "price15": "Jusqu'à 15 $/h", "price25": "Jusqu'à 25 $/h", "price40": "Jusqu'à 40 $/h", "loading": "Recherche d'enseignants…", "empty": "Aucun enseignant ne correspond à vos filtres", "emptyDescription": "Essayez d'élargir vos critères de recherche.", "locationNotSet": "Lieu non renseigné", "perHour": "/h"}
+  ,"courseDetails": {"loading": "Chargement du cours…", "notFound": "Ce cours est introuvable ou n'est pas publié.", "scholarReviewed": "Examiné par un érudit", "outline": "Plan du cours", "outlineSoon": "Le plan sera bientôt disponible.", "hoursTotal": "{{count}} heures au total", "addWishlist": "Ajouter à la liste de souhaits"}
+  ,"parentBookings": {"empty": "Aucun cours réservé", "emptyDescription": "Trouvez un enseignant et réservez votre premier cours.", "forStudent": "Pour {{name}}", "via": "via {{provider}}", "joinClass": "Rejoindre le cours"}
+  ,"assistanceApplication": {"title": "Demande d'aide financière", "intro": "Nous demandons uniquement les informations nécessaires à l'évaluation. Votre demande est étudiée confidentiellement et n'est jamais rendue publique.", "yourApplications": "Vos demandes", "submitted": "Soumise le {{date}}", "percentApproved": "{{percent}} % approuvé", "success": "Votre demande a été soumise. Un administrateur l'étudiera et pourra vous contacter afin de planifier un bref entretien.", "selectStudent": "Veuillez sélectionner un élève.", "numberDependents": "Nombre de personnes à charge", "householdIncome": "Tranche de revenus du foyer", "situation": "Parlez-nous de votre situation", "reasonPlaceholder": "Expliquez brièvement pourquoi vous demandez une aide.", "submit": "Soumettre la demande", "incomeRanges": ["Moins de 20 000 $/an", "20 000–40 000 $/an", "40 000–60 000 $/an", "Plus de 60 000 $/an", "Préfère ne pas répondre"]}
+  ,
+  "studentAssignments": {"title":"Devoirs","empty":"Aucun devoir pour le moment","assignment":"Devoir","course":"Cours","dueDate":"Date limite","status":"Statut","grade":"Note","statuses":{"not_started":"Non commencé","in_progress":"En cours","submitted":"Soumis","graded":"Noté","late":"En retard"}},
+  "assignmentSubmission": {"notFound":"Devoir introuvable.","uploadFailed":"Échec de l'envoi du fichier.","due":"À rendre {{date}}","noDueDate":"Aucune date limite","instructions":"Consignes","downloadAttachment":"Télécharger la pièce jointe","graded":"Noté","teacherFeedback":"Commentaire de l'enseignant :","alreadySubmitted":"Déjà soumis — une nouvelle soumission remplacera votre réponse","yourAnswer":"Votre réponse","attachFile":"Joindre un fichier (facultatif)","resubmit":"Soumettre à nouveau","success":"Soumis avec succès."},
+  "teacherClasses":{"title":"Mes cours","upcoming":"Cours à venir","past":"Cours passés","empty":"Rien ici pour le moment","noStudents":"Aucun élève inscrit pour le moment.","attendance":{"present":"Présent","absent":"Absent","late":"En retard","excused":"Excusé"}},
+  "teacherApplicationStatus":{"confirmEmail":"Confirmez votre e-mail","confirmEmailDescription":"Nous avons envoyé un lien de confirmation à votre e-mail. Après confirmation, connectez-vous pour terminer votre candidature et consulter son statut ici.","loading":"Chargement de votre candidature…","empty":"Aucune candidature trouvée","emptyDescription":"Vous n'avez pas encore soumis de candidature d'enseignant.","title":"Votre candidature d'enseignant","rejected":"Votre candidature n'a pas été approuvée cette fois-ci.","adminMessage":"Message de l'administration :","subjects":"Matières","gradeLevels":"Niveaux scolaires","submitted":"Soumise","statuses":{"submitted":"Soumise","under_review":"En cours d'examen","info_requested":"Informations demandées","approved":"Approuvée"}},
+  "curriculum":{"title":"Programme","intro":"Nos programmes académiques sont structurés selon des normes internationales reconnues, avec des objectifs, thèmes et évaluations transparents pour chaque matière et niveau. Cela ne garantit pas une reconnaissance automatique par chaque université : la reconnaissance des qualifications varie selon l'établissement et le pays, et nous le présentons clairement sans l'exagérer.","frameworkNote":"L'architecture du cadre permet d'ajouter d'autres parcours au fil du temps, par exemple alignés sur l'IB, de type Cambridge ou adaptés aux programmes locaux, sans restructurer la plateforme.","grade":"Niveau {{grade}}","objectives":"Objectifs :","assessment":"Évaluation :","credits":"{{count}} crédit(s)"},
+  "teacherProfile":{"notFound":"Cet enseignant est introuvable ou n'est pas actuellement approuvé."},
+  "quiz":{"loading":"Chargement du quiz…","questions":"{{count}} question(s)","timeLimit":"limite de {{count}} min","yourScore":"Votre score","submit":"Soumettre le quiz"},
+  "progress":{"title":"Mes progrès","assignment":"Devoir","courseCompletion":"Achèvement des cours","noEnrollments":"Aucune inscription pour le moment","gradedAssignments":"Devoirs notés","noGradedAssignments":"Aucun devoir noté pour le moment.","attendance":"Présence","presentRate":"Taux de présence sur {{count}} cours enregistré(s)"},
+  "studentDashboard":{"profileNotFound":"Votre profil élève est introuvable.","welcome":"Bon retour, {{name}} !","nextClass":"Prochain cours","upcomingClasses":"Cours à venir","activeCourses":"Cours actifs","assignmentsDue":"Devoirs à rendre","averageProgress":"Progression moyenne","noCourses":"Vous n'êtes inscrit à aucun cours pour le moment.","assignmentDeadlines":"Échéances des devoirs","noPendingAssignments":"Aucun devoir en attente."},
+  "courseLearning":{"loading":"Chargement du cours…","failedToLoad":"Échec du chargement","completedPercent":"{{percent}} % terminé","quizzes":"Quiz","selectLesson":"Sélectionnez une leçon pour commencer.","videoPlayer":"Espace réservé au lecteur vidéo","completed":"Terminé","markComplete":"Marquer comme terminé"},
+  "teacherApply":{"title":"Devenir enseignant","subtitle":"Les candidatures sont examinées par notre équipe administrative avant que vous puissiez commencer à enseigner.","personal":"Informations personnelles","professional":"Informations professionnelles","createPassword":"Créer un mot de passe","subjects":"Matières que vous pouvez enseigner","gradeLevels":"Niveaux scolaires","languages":"Langues d'enseignement","yearsExperience":"Années d'expérience","teachingExperience":"Expérience d'enseignement","educationalBackground":"Parcours scolaire","documents":"Documents","documentsNote":"Les fichiers sont conservés de façon privée et ne sont visibles que par les administrateurs examinant votre candidature ; ils ne sont jamais affichés publiquement.","resume":"CV","degree":"Diplôme / certificat","credential":"Qualification d'enseignement / autre certification","consent":"J'autorise l'école à vérifier mes qualifications et à traiter ces informations afin d'examiner ma candidature d'enseignant, conformément à la politique de confidentialité.","submit":"Soumettre la candidature","consentRequired":"Vous devez accepter l'avis de confidentialité/consentement pour postuler.","subjectRequired":"Sélectionnez au moins une matière que vous pouvez enseigner.","submitError":"Une erreur est survenue lors de l'envoi de votre candidature."},
+  "parentDashboard":{"loading":"Chargement de votre famille…","noChildren":"Aucun enfant ajouté","noChildrenDescription":"Ajoutez le profil de votre enfant pour commencer à réserver des cours et à vous inscrire aux cours.","title":"Tableau de bord parent","selectStudent":"Sélectionner un élève :","upcomingClasses":"Cours à venir","activeCourses":"Cours actifs","paymentsDue":"Paiements dus","pendingPayments":"Vous avez {{count}} paiement(s) en attente.","viewPayments":"Voir les paiements","noUpcomingClasses":"Aucun cours à venir planifié.","assignmentAlerts":"Alertes de devoirs","due":"À rendre {{date}}","noDeadlines":"Aucune échéance à venir.","studentProgress":"Progrès de {{name}}","noCourses":"Vous n'êtes inscrit à aucun cours pour le moment."},
+  "teacherDashboard":{"welcome":"Bienvenue, {{name}}","accountStatus":"Le statut de votre compte enseignant est","approvalNote":"Vous pourrez créer des cours et accepter des réservations une fois approuvé.","viewApplicationStatus":"Voir le statut de la candidature","upcomingClasses":"Cours à venir","earnings":"Revenus (démo)","noUpcomingClasses":"Aucun cours à venir."}
 }

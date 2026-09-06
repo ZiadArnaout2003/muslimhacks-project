@@ -2,8 +2,6 @@ import type { UserRole } from '../types/database'
 
 export function dashboardPathForRole(role: UserRole): string {
   switch (role) {
-    case 'parent':
-      return '/parent/dashboard'
     case 'student':
       return '/student/dashboard'
     case 'teacher':

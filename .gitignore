@@ -8,3 +8,4 @@ dist-ssr
 *.log
 supabase/.branches
 supabase/.temp
+zipFile.zip

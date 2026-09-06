@@ -9,10 +9,11 @@ import { Select, Input, FieldError } from '../../components/ui/Input'
 import { LoadingState } from '../../components/ui/States'
 import { COMMON_TIMEZONES, browserTimezone } from '../../lib/timezone'
 import type { TeacherAvailability } from '../../types/database'
-
-const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+import { useTranslation } from 'react-i18next'
 
 export function TeacherAvailabilityPage() {
+  const { t } = useTranslation()
+  const dayNames = t('teacherAvailability.days', { returnObjects: true }) as string[]
   const { session } = useAuth()
   const teacherId = session?.user.id ?? ''
 
@@ -38,7 +39,7 @@ export function TeacherAvailabilityPage() {
     })
     setSaving(false)
     if (error) {
-      setError(error.message.includes('row-level security') ? 'Your teacher account must be approved before publishing availability.' : error.message)
+      setError(error.message.includes('row-level security') ? t('teacherAvailability.approvalRequired') : error.message)
       return
     }
     window.location.reload()
@@ -53,30 +54,30 @@ export function TeacherAvailabilityPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Availability</h1>
-      <p className="mt-1 text-sm text-gray-500">Parents will see these times automatically converted to their own timezone.</p>
+      <h1 className="text-2xl font-bold text-gray-900">{t('teacherAvailability.title')}</h1>
+      <p className="mt-1 text-sm text-gray-500">{t('teacherAvailability.subtitle')}</p>
 
       <Card className="mt-6">
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Weekly Slots</h2>
+          <h2 className="font-semibold text-gray-900">{t('teacherAvailability.weeklySlots')}</h2>
           <ul className="mt-3 space-y-2">
             {(availability ?? []).map((a) => (
               <li key={a.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm">
                 <span>
-                  {DAY_NAMES[a.day_of_week]} {a.start_time.slice(0, 5)}–{a.end_time.slice(0, 5)} ({a.timezone})
+                  {dayNames[a.day_of_week]} {a.start_time.slice(0, 5)}–{a.end_time.slice(0, 5)} ({a.timezone})
                 </span>
                 <button onClick={() => removeSlot(a.id)} className="text-gray-400 hover:text-red-600">
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" aria-label={t('teacherAvailability.removeSlot')} />
                 </button>
               </li>
             ))}
-            {(availability ?? []).length === 0 && <p className="text-sm text-gray-500">No availability set yet.</p>}
+            {(availability ?? []).length === 0 && <p className="text-sm text-gray-500">{t('teacherAvailability.empty')}</p>}
           </ul>
           {loadError && <FieldError>{loadError}</FieldError>}
 
           <div className="mt-5 grid grid-cols-2 gap-3 rounded-lg border border-dashed border-gray-200 p-4 sm:grid-cols-4">
             <Select value={form.day} onChange={(e) => setForm((f) => ({ ...f, day: Number(e.target.value) }))}>
-              {DAY_NAMES.map((d, i) => (
+              {dayNames.map((d, i) => (
                 <option key={d} value={i}>
                   {d}
                 </option>
@@ -92,7 +93,7 @@ export function TeacherAvailabilityPage() {
           </div>
           <FieldError>{error}</FieldError>
           <Button className="mt-3" size="sm" loading={saving} onClick={addSlot}>
-            <Plus className="h-4 w-4" /> Add Slot
+            <Plus className="h-4 w-4" /> {t('teacherAvailability.addSlot')}
           </Button>
         </CardBody>
       </Card>

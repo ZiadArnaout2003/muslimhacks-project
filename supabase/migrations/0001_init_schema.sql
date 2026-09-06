@@ -164,7 +164,6 @@ create table curriculum_subjects (
 -- ----------------------------------------------------------------------------
 create table courses (
   id uuid primary key default gen_random_uuid(),
-  teacher_id uuid not null references teachers(profile_id) on delete cascade,
   subject_id uuid not null references subjects(id),
   curriculum_subject_id uuid references curriculum_subjects(id),
   title text not null,
@@ -480,7 +479,6 @@ create table islamic_content_reviews (
 create index idx_students_parent on students(parent_id);
 create index idx_teacher_subjects_subject on teacher_subjects(subject_id);
 create index idx_courses_subject on courses(subject_id);
-create index idx_courses_teacher on courses(teacher_id);
 create index idx_enrollments_student on enrollments(student_id);
 create index idx_enrollments_course on enrollments(course_id);
 create index idx_classes_teacher on classes(teacher_id, start_datetime);

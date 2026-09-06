@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
@@ -16,6 +17,7 @@ interface QuestionRow {
 }
 
 export function QuizPage() {
+  const { t } = useTranslation()
   const { quizId = '' } = useParams()
   const { student } = useStudentRecord()
 
@@ -54,21 +56,21 @@ export function QuizPage() {
     setResult({ score: data.score })
   }
 
-  if (loading) return <LoadingState label="Loading quiz…" />
+  if (loading) return <LoadingState label={t('quiz.loading')} />
   if (error) return <ErrorState message={error} />
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-bold text-gray-900">{quiz?.title}</h1>
       <p className="mt-1 text-sm text-gray-500">
-        {(questions ?? []).length} question(s)
-        {quiz?.time_limit_minutes ? ` · ${quiz.time_limit_minutes} min time limit` : ''}
+        {t('quiz.questions', { count: (questions ?? []).length })}
+        {quiz?.time_limit_minutes ? ` · ${t('quiz.timeLimit', { count: quiz.time_limit_minutes })}` : ''}
       </p>
 
       {result ? (
         <Card className="mt-6">
           <CardBody className="text-center">
-            <p className="text-sm text-gray-500">Your score</p>
+            <p className="text-sm text-gray-500">{t('quiz.yourScore')}</p>
             <p className="mt-1 text-4xl font-bold text-brand-700">
               {result.score}/{totalPoints}
             </p>
@@ -109,7 +111,7 @@ export function QuizPage() {
 
           {submitError && <ErrorState message={submitError} />}
           <Button className="w-full" loading={submitting} onClick={handleSubmit}>
-            Submit Quiz
+            {t('quiz.submit')}
           </Button>
         </div>
       )}

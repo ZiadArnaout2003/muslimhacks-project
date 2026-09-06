@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams, Link } from 'react-router-dom'
 import { FileText, Video as VideoIcon, CheckCircle2, Circle, ClipboardList, HelpCircle } from 'lucide-react'
 import { supabase } from '../../lib/supabaseClient'
@@ -36,11 +37,12 @@ interface QuizLite {
 }
 
 export function CourseLearningPage() {
+  const { t } = useTranslation()
   const { courseId = '' } = useParams()
   const { student } = useStudentRecord()
 
-  const { data: course } = useSupabaseQuery<{ id: string; title: string }>(
-    () => supabase.from('courses').select('id, title').eq('id', courseId).maybeSingle(),
+  const { data: course } = useSupabaseQuery<{ id: string; title: string; meeting_url: string | null }>(
+    () => supabase.from('courses').select('id, title, meeting_url').eq('id', courseId).maybeSingle(),
     [courseId]
   )
 
@@ -78,6 +80,10 @@ export function CourseLearningPage() {
     () => supabase.from('quizzes').select('id, title').eq('course_id', courseId),
     [courseId]
   )
+  const { data: announcements } = useSupabaseQuery<{ id: string; title: string; body: string; created_at: string }[]>(
+    () => supabase.from('announcements').select('id, title, body, created_at').eq('course_id', courseId).order('created_at', { ascending: false }),
+    [courseId]
+  )
 
   const allLessons = useMemo(
     () => (modules ?? []).flatMap((m) => m.lessons ?? []).sort((a, b) => a.order_index - b.order_index),
@@ -104,8 +110,8 @@ export function CourseLearningPage() {
     window.location.reload()
   }
 
-  if (loading) return <LoadingState label="Loading course…" />
-  if (error || progressError) return <ErrorState message={error ?? progressError ?? 'Failed to load'} />
+  if (loading) return <LoadingState label={t('courseLearning.loading')} />
+  if (error || progressError) return <ErrorState message={error ?? progressError ?? t('courseLearning.failedToLoad')} />
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -116,7 +122,9 @@ export function CourseLearningPage() {
             <div className="mt-2 h-2 rounded-full bg-gray-100">
               <div className="h-2 rounded-full bg-brand-600" style={{ width: `${progressPercent}%` }} />
             </div>
-            <p className="mt-1 text-xs text-gray-500">{progressPercent}% completed</p>
+            <p className="mt-1 text-xs text-gray-500">{t('courseLearning.completedPercent', { percent: progressPercent })}</p>
+            {course?.meeting_url && <a href={course.meeting_url} target="_blank" rel="noreferrer" className="mt-3 block text-sm font-medium text-brand-700 underline">{t('courseLearning.joinMeeting')}</a>}
+            {(announcements ?? []).length > 0 && <div className="mt-4 border-t border-gray-100 pt-3"><p className="text-xs font-semibold uppercase text-gray-400">{t('courseLearning.announcements')}</p>{announcements!.map((item) => <div key={item.id} className="mt-2"><p className="text-sm font-medium text-gray-800">{item.title}</p><p className="whitespace-pre-wrap text-sm text-gray-600">{item.body}</p></div>)}</div>}
 
             <nav className="mt-4 space-y-3">
               {(modules ?? []).map((m) => (
@@ -148,7 +156,7 @@ export function CourseLearningPage() {
 
               {(assignments ?? []).length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold uppercase text-gray-400">Assignments</p>
+                  <p className="text-xs font-semibold uppercase text-gray-400">{t('dashboard.assignments')}</p>
                   <ul className="mt-1 space-y-1">
                     {assignments!.map((a) => (
                       <li key={a.id}>
@@ -163,7 +171,7 @@ export function CourseLearningPage() {
 
               {(quizzes ?? []).length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold uppercase text-gray-400">Quizzes</p>
+                  <p className="text-xs font-semibold uppercase text-gray-400">{t('courseLearning.quizzes')}</p>
                   <ul className="mt-1 space-y-1">
                     {quizzes!.map((q) => (
                       <li key={q.id}>
@@ -183,7 +191,7 @@ export function CourseLearningPage() {
       <main className="lg:col-span-3">
         <Card>
           <CardBody>
-            {!activeLesson && <p className="text-sm text-gray-500">Select a lesson to begin.</p>}
+            {!activeLesson && <p className="text-sm text-gray-500">{t('courseLearning.selectLesson')}</p>}
             {activeLesson && (
               <>
                 <div className="flex items-center gap-2 text-xs font-semibold uppercase text-brand-600">
@@ -194,13 +202,13 @@ export function CourseLearningPage() {
 
                 {activeLesson.content_type === 'video' && activeLesson.content_url && (
                   <div className="mt-4 flex aspect-video items-center justify-center rounded-lg bg-gray-900 text-sm text-gray-400">
-                    Video player placeholder — {activeLesson.content_url}
+                    {t('courseLearning.videoPlayer')} — {activeLesson.content_url}
                   </div>
                 )}
                 {activeLesson.content_text && <p className="mt-4 whitespace-pre-line text-gray-700">{activeLesson.content_text}</p>}
 
                 <Button className="mt-6" onClick={markComplete} disabled={completedSet.has(activeLesson.id)}>
-                  {completedSet.has(activeLesson.id) ? 'Completed' : 'Mark as Complete'}
+                  {completedSet.has(activeLesson.id) ? t('courseLearning.completed') : t('courseLearning.markComplete')}
                 </Button>
               </>
             )}

@@ -20,10 +20,8 @@ import { LoginPage } from './pages/auth/LoginPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { TeacherApplyPage } from './pages/auth/TeacherApplyPage'
+import { StudentRegisterPage } from './pages/auth/StudentRegisterPage'
 
-import { ParentOnboardingPage } from './pages/parent/ParentOnboardingPage'
-import { ParentDashboardPage } from './pages/parent/ParentDashboardPage'
-import { ParentChildrenPage } from './pages/parent/ParentChildrenPage'
 import { ParentBookingsPage } from './pages/parent/ParentBookingsPage'
 import { BookingPage } from './pages/parent/BookingPage'
 import { CheckoutPage } from './pages/parent/CheckoutPage'
@@ -41,9 +39,9 @@ import { ProgressPage } from './pages/student/ProgressPage'
 import { TeacherDashboardPage } from './pages/teacher/TeacherDashboardPage'
 import { TeacherApplicationStatusPage } from './pages/teacher/TeacherApplicationStatusPage'
 import { TeacherCoursesListPage } from './pages/teacher/TeacherCoursesListPage'
-import { TeacherCourseEditorPage } from './pages/teacher/TeacherCourseEditorPage'
 import { TeacherAvailabilityPage } from './pages/teacher/TeacherAvailabilityPage'
 import { TeacherClassesPage } from './pages/teacher/TeacherClassesPage'
+import { TeacherCourseEditorPage } from './pages/teacher/TeacherCourseEditorPage'
 
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
 import { AdminTeacherManagementPage } from './pages/admin/AdminTeacherManagementPage'
@@ -69,6 +67,7 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/apply-to-teach" element={<TeacherApplyPage />} />
+            <Route path="/student/register" element={<StudentRegisterPage />} />
             <Route path="/teachers" element={<TeacherSearchPage />} />
             <Route path="/teachers/:teacherId" element={<TeacherProfilePage />} />
             <Route path="/courses" element={<CourseCataloguePage />} />
@@ -84,25 +83,6 @@ export default function App() {
             <Route path="/terms" element={<TermsPage />} />
           </Route>
 
-          {/* Parent onboarding + standalone flows (no sidebar) */}
-          <Route element={<ProtectedRoute allow={['parent']} />}>
-            <Route path="/parent/onboarding" element={<ParentOnboardingPage />} />
-            <Route path="/book" element={<BookingPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-          </Route>
-
-          {/* Parent dashboard */}
-          <Route element={<ProtectedRoute allow={['parent']} />}>
-            <Route element={<DashboardShell />}>
-              <Route path="/parent/dashboard" element={<ParentDashboardPage />} />
-              <Route path="/parent/children" element={<ParentChildrenPage />} />
-              <Route path="/parent/bookings" element={<ParentBookingsPage />} />
-              <Route path="/parent/payments" element={<PaymentHistoryPage />} />
-              <Route path="/parent/financial-assistance" element={<FinancialAssistanceApplyPage />} />
-              <Route path="/parent/messages" element={<PlaceholderPage title="Messages" />} />
-            </Route>
-          </Route>
-
           {/* Student dashboard */}
           <Route element={<ProtectedRoute allow={['student']} />}>
             <Route element={<DashboardShell />}>
@@ -113,6 +93,11 @@ export default function App() {
               <Route path="/student/assignments/:assignmentId" element={<AssignmentSubmissionPage />} />
               <Route path="/student/quiz/:quizId" element={<QuizPage />} />
               <Route path="/student/progress" element={<ProgressPage />} />
+              <Route path="/student/bookings" element={<ParentBookingsPage />} />
+              <Route path="/student/book" element={<BookingPage />} />
+              <Route path="/student/checkout" element={<CheckoutPage />} />
+              <Route path="/student/payments" element={<PaymentHistoryPage />} />
+              <Route path="/student/financial-assistance" element={<FinancialAssistanceApplyPage />} />
             </Route>
           </Route>
 
@@ -149,7 +134,7 @@ export default function App() {
           </Route>
 
           {/* Shared settings — any authenticated role */}
-          <Route element={<ProtectedRoute allow={['parent', 'student', 'teacher', 'admin', 'scholar']} />}>
+          <Route element={<ProtectedRoute allow={['student', 'teacher', 'admin', 'scholar']} />}>
             <Route element={<DashboardShell />}>
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
