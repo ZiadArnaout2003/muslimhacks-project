@@ -85,7 +85,7 @@ export function Navbar() {
           )}
         </div>
 
-        <button className="lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Toggle menu">
+        <button className="lg:hidden" onClick={() => setOpen((o) => !o)} aria-label={t('nav.toggleMenu')}>
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>

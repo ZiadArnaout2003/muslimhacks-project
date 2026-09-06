@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabaseClient'
+import { useTranslation } from 'react-i18next'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { Card, CardBody } from '../../components/ui/Card'
 import { LoadingState, ErrorState } from '../../components/ui/States'
@@ -18,8 +19,10 @@ interface FrameworkRow {
   name: string
   description: string | null
 }
+interface PublishedCourse { id: string; title: string; description: string | null; level: string | null }
 
 export function CurriculumPage() {
+  const { t } = useTranslation()
   const { data: frameworks, loading: fLoading } = useSupabaseQuery<FrameworkRow[]>(
     () => supabase.from('curriculum_frameworks').select('id, name, description').eq('is_active', true),
     []
@@ -32,15 +35,16 @@ export function CurriculumPage() {
         .select('id, grade, learning_objectives, topics, assessment, credits, subjects(name, category)'),
     []
   )
+  const { data: courses } = useSupabaseQuery<PublishedCourse[]>(
+    () => supabase.from('courses').select('id, title, description, level').eq('status', 'published').order('title'),
+    []
+  )
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
-      <h1 className="text-3xl font-bold text-gray-900">Curriculum</h1>
+      <h1 className="text-3xl font-bold text-gray-900">{t('curriculum.title')}</h1>
       <p className="mt-3 text-gray-600">
-        Our academic programs are structured around recognized international standards, with transparent
-        learning objectives, topics and assessment for every subject and grade. This does not mean automatic
-        recognition by every university — credential recognition varies by institution and country, and we
-        make that transparent rather than overstating it.
+        {t('curriculum.intro')}
       </p>
 
       {!fLoading && (frameworks ?? []).length > 0 && (
@@ -55,8 +59,7 @@ export function CurriculumPage() {
       )}
 
       <p className="mt-8 text-sm text-gray-500">
-        The framework architecture supports adding further pathways over time (e.g. IB-aligned, Cambridge-style,
-        or local curriculum adaptations) without restructuring the platform.
+        {t('curriculum.frameworkNote')}
       </p>
 
       <div className="mt-8">
@@ -67,20 +70,25 @@ export function CurriculumPage() {
             <Card key={row.id}>
               <CardBody>
                 <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
-                  {row.subjects?.name} · Grade {row.grade}
+                  {row.subjects?.name} · {t('curriculum.grade', { grade: row.grade })}
                 </p>
                 <p className="mt-2 text-sm text-gray-700">
-                  <strong>Objectives:</strong> {row.learning_objectives}
+                  <strong>{t('curriculum.objectives')}</strong> {row.learning_objectives}
                 </p>
                 <p className="mt-1 text-sm text-gray-700">
-                  <strong>Assessment:</strong> {row.assessment}
+                  <strong>{t('curriculum.assessment')}</strong> {row.assessment}
                 </p>
-                {row.credits && <p className="mt-1 text-xs text-gray-400">{row.credits} credit(s)</p>}
+                {row.credits && <p className="mt-1 text-xs text-gray-400">{t('curriculum.credits', { count: row.credits })}</p>}
               </CardBody>
             </Card>
           ))}
         </div>
       </div>
+      <section className="mt-10">
+        <h2 className="text-xl font-bold text-gray-900">{t('curriculum.systemCourses')}</h2>
+        <p className="mt-2 text-sm text-gray-600">{t('curriculum.systemCoursesDescription')}</p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">{(courses ?? []).map((course) => <Card key={course.id}><CardBody><p className="font-semibold text-gray-900">{course.title}</p><p className="mt-1 text-sm text-gray-500">{course.level}</p><p className="mt-2 text-sm text-gray-700">{course.description}</p></CardBody></Card>)}</div>
+      </section>
     </div>
   )
 }

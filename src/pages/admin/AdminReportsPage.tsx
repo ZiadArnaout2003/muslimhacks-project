@@ -5,6 +5,7 @@ import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { LoadingState } from '../../components/ui/States'
+import { useTranslation } from 'react-i18next'
 
 interface EnrollmentRow {
   courses: { title: string } | null
@@ -32,6 +33,7 @@ function downloadCsv<T extends object>(filename: string, rows: T[]) {
 }
 
 export function AdminReportsPage() {
+  const { t } = useTranslation()
   const { data: enrollments, loading } = useSupabaseQuery<EnrollmentRow[]>(
     () => supabase.from('enrollments').select('courses(title)'),
     []
@@ -42,7 +44,7 @@ export function AdminReportsPage() {
   )
 
   const byCourse = (enrollments ?? []).reduce<Record<string, number>>((acc, e) => {
-    const title = e.courses?.title ?? 'Unknown'
+    const title = e.courses?.title ?? t('admin.unknown')
     acc[title] = (acc[title] ?? 0) + 1
     return acc
   }, {})
@@ -53,15 +55,15 @@ export function AdminReportsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('admin.reports')}</h1>
         <Button size="sm" variant="outline" onClick={() => downloadCsv('invoices.csv', invoices ?? [])}>
-          <Download className="h-4 w-4" /> Export Invoices (CSV)
+          <Download className="h-4 w-4" /> {t('admin.exportInvoices')}
         </Button>
       </div>
 
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Enrollment by Course</h2>
+          <h2 className="font-semibold text-gray-900">{t('admin.enrollmentByCourse')}</h2>
           <div className="mt-4 h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
@@ -78,11 +80,11 @@ export function AdminReportsPage() {
 
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Revenue Summary</h2>
+          <h2 className="font-semibold text-gray-900">{t('admin.revenueSummary')}</h2>
           <p className="mt-2 text-3xl font-bold text-brand-700">
             ${(invoices ?? []).filter((i) => i.status === 'paid').reduce((s, i) => s + Number(i.final_amount), 0).toFixed(2)}
           </p>
-          <p className="text-xs text-gray-500">Total collected across {(invoices ?? []).filter((i) => i.status === 'paid').length} paid invoices</p>
+          <p className="text-xs text-gray-500">{t('admin.totalCollected', { count: (invoices ?? []).filter((i) => i.status === 'paid').length })}</p>
         </CardBody>
       </Card>
     </div>

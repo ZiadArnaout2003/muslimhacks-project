@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom'
 import { CalendarPlus } from 'lucide-react'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
-import { useAuth } from '../../contexts/AuthContext'
+import { useStudentRecord } from '../../hooks/useStudentRecord'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
 import { LoadingState, EmptyState } from '../../components/ui/States'
 import { browserTimezone, formatDateInZone, formatTimeInZone } from '../../lib/timezone'
 import type { ClassStatus } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 interface BookingRow {
   class_id: string
@@ -31,24 +32,19 @@ const STATUS_TONE: Record<ClassStatus, 'brand' | 'success' | 'danger' | 'warning
 }
 
 export function ParentBookingsPage() {
-  const { session } = useAuth()
-
-  const { data: children } = useSupabaseQuery<{ id: string }[]>(
-    () => supabase.from('students').select('id').eq('parent_id', session?.user.id ?? ''),
-    [session?.user.id]
-  )
-  const childIds = (children ?? []).map((c) => c.id)
+  const { t } = useTranslation()
+  const { student, loading: studentLoading } = useStudentRecord()
 
   const { data: bookings, loading } = useSupabaseQuery<BookingRow[]>(
     () =>
-      childIds.length
+      student
         ? supabase
             .from('class_students')
             .select('class_id, students(first_name, last_name), classes(id, title, start_datetime, end_datetime, status, provider)')
-            .in('student_id', childIds)
+            .eq('student_id', student.id)
             .returns<BookingRow[]>()
         : Promise.resolve({ data: [], error: null }),
-    [childIds.join(',')]
+    [student?.id]
   )
 
   const localTz = browserTimezone()
@@ -59,20 +55,20 @@ export function ParentBookingsPage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Bookings & Schedule</h1>
-        <Link to="/book">
+        <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.bookings')}</h1>
+        <Link to="/student/book">
           <Button size="sm">
-            <CalendarPlus className="h-4 w-4" /> Book a Class
+            <CalendarPlus className="h-4 w-4" /> {t('common.bookClass')}
           </Button>
         </Link>
       </div>
 
       <div className="mt-6">
-        {loading && <LoadingState />}
-        {!loading && sorted.length === 0 && (
-          <EmptyState title="No classes booked yet" description="Find a teacher and book your first class." />
+        {(loading || studentLoading) && <LoadingState />}
+        {!loading && !studentLoading && sorted.length === 0 && (
+          <EmptyState title={t('parentBookings.empty')} description={t('parentBookings.emptyDescription')} />
         )}
-        {!loading && sorted.length > 0 && (
+        {!loading && !studentLoading && sorted.length > 0 && (
           <div className="space-y-3">
             {sorted.map((row) => {
               const cls = row.classes!
@@ -83,16 +79,16 @@ export function ParentBookingsPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-gray-900">{cls.title}</p>
-                        <Badge tone={STATUS_TONE[cls.status]}>{cls.status}</Badge>
+                        <Badge tone={STATUS_TONE[cls.status]}>{t(`admin.classStatuses.${cls.status}`)}</Badge>
                       </div>
                       <p className="text-xs text-gray-500">
-                        For {row.students?.first_name} · {formatDateInZone(cls.start_datetime, localTz)} ·{' '}
+                        {t('parentBookings.forStudent', { name: row.students?.first_name })} · {formatDateInZone(cls.start_datetime, localTz)} ·{' '}
                         {formatTimeInZone(cls.start_datetime, localTz)}–{formatTimeInZone(cls.end_datetime, localTz)} (
-                        {localTz}) · via {cls.provider}
+                        {localTz}) · {t('parentBookings.via', { provider: cls.provider })}
                       </p>
                     </div>
                     <Button size="sm" disabled={!isSoon}>
-                      Join Class
+                      {t('parentBookings.joinClass')}
                     </Button>
                   </CardBody>
                 </Card>

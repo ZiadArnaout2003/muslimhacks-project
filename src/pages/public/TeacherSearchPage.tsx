@@ -9,6 +9,7 @@ import { Button } from '../../components/ui/Button'
 import { LoadingState, EmptyState, ErrorState } from '../../components/ui/States'
 import { GRADE_LEVELS } from '../../lib/constants'
 import type { Subject, TeacherCard } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 interface TeacherSubjectRow {
   teacher_id: string
@@ -17,6 +18,7 @@ interface TeacherSubjectRow {
 }
 
 export function TeacherSearchPage() {
+  const { t } = useTranslation()
   const [subjectId, setSubjectId] = useState('')
   const [grade, setGrade] = useState('')
   const [language, setLanguage] = useState('')
@@ -69,75 +71,75 @@ export function TeacherSearchPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900">Find a Teacher</h1>
-      <p className="mt-1 text-sm text-gray-500">Filter by subject, grade, language and more.</p>
+      <h1 className="text-2xl font-bold text-gray-900">{t('teacherSearch.title')}</h1>
+      <p className="mt-1 text-sm text-gray-500">{t('teacherSearch.subtitle')}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-3 rounded-xl border border-black/5 bg-white p-4 sm:grid-cols-3 lg:grid-cols-5">
-        <Select value={subjectId} onChange={(e) => setSubjectId(e.target.value)} aria-label="Subject">
-          <option value="">All subjects</option>
+        <Select value={subjectId} onChange={(e) => setSubjectId(e.target.value)} aria-label={t('teacherSearch.subject')}>
+          <option value="">{t('teacherSearch.allSubjects')}</option>
           {(subjects ?? []).map((s) => (
             <option key={s.id} value={s.id}>
               {s.name}
             </option>
           ))}
         </Select>
-        <Select value={grade} onChange={(e) => setGrade(e.target.value)} aria-label="Grade">
-          <option value="">All grades</option>
+        <Select value={grade} onChange={(e) => setGrade(e.target.value)} aria-label={t('teacherSearch.grade')}>
+          <option value="">{t('teacherSearch.allGrades')}</option>
           {GRADE_LEVELS.map((g) => (
             <option key={g} value={g}>
-              Grade {g}
+              {t('children.grade', { grade: g })}
             </option>
           ))}
         </Select>
-        <Select value={language} onChange={(e) => setLanguage(e.target.value)} aria-label="Language">
-          <option value="">All languages</option>
+        <Select value={language} onChange={(e) => setLanguage(e.target.value)} aria-label={t('teacherSearch.language')}>
+          <option value="">{t('teacherSearch.allLanguages')}</option>
           {allLanguages.map((l) => (
             <option key={l} value={l}>
               {l}
             </option>
           ))}
         </Select>
-        <Select value={gender} onChange={(e) => setGender(e.target.value)} aria-label="Teacher gender">
-          <option value="">Any gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
+        <Select value={gender} onChange={(e) => setGender(e.target.value)} aria-label={t('teacherSearch.gender')}>
+          <option value="">{t('teacherSearch.anyGender')}</option>
+          <option value="male">{t('onboarding.male')}</option>
+          <option value="female">{t('onboarding.female')}</option>
         </Select>
-        <Select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} aria-label="Max price">
-          <option value="">Any price</option>
-          <option value="15">Up to $15/hr</option>
-          <option value="25">Up to $25/hr</option>
-          <option value="40">Up to $40/hr</option>
+        <Select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} aria-label={t('teacherSearch.maxPrice')}>
+          <option value="">{t('teacherSearch.anyPrice')}</option>
+          <option value="15">{t('teacherSearch.price15')}</option>
+          <option value="25">{t('teacherSearch.price25')}</option>
+          <option value="40">{t('teacherSearch.price40')}</option>
         </Select>
       </div>
 
       <div className="mt-8">
-        {loading && <LoadingState label="Searching teachers…" />}
+        {loading && <LoadingState label={t('teacherSearch.loading')} />}
         {error && <ErrorState message={error} />}
         {!loading && !error && filtered.length === 0 && (
-          <EmptyState title="No teachers match your filters" description="Try widening your search criteria." />
+          <EmptyState title={t('teacherSearch.empty')} description={t('teacherSearch.emptyDescription')} />
         )}
         {!loading && filtered.length > 0 && (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((t) => (
-              <Card key={t.id}>
+            {filtered.map((teacher) => (
+              <Card key={teacher.id}>
                 <CardBody>
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700">
-                      {t.first_name[0]}
-                      {t.last_name[0]}
+                      {teacher.first_name[0]}
+                      {teacher.last_name[0]}
                     </div>
                     <div>
                       <p className="font-semibold text-gray-900">
-                        {t.first_name} {t.last_name}
+                        {teacher.first_name} {teacher.last_name}
                       </p>
                       <p className="flex items-center gap-1 text-xs text-gray-500">
-                        <MapPin className="h-3 w-3" /> {t.country ?? 'Location not set'}
+                        <MapPin className="h-3 w-3" /> {teacher.country ?? t('teacherSearch.locationNotSet')}
                       </p>
                     </div>
                   </div>
-                  <p className="mt-3 line-clamp-2 text-sm text-gray-500">{t.bio}</p>
+                  <p className="mt-3 line-clamp-2 text-sm text-gray-500">{teacher.bio}</p>
                   <div className="mt-3 flex flex-wrap gap-1">
-                    {(t.languages ?? []).map((l) => (
+                    {(teacher.languages ?? []).map((l) => (
                       <span key={l} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                         {l}
                       </span>
@@ -146,14 +148,14 @@ export function TeacherSearchPage() {
                   <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center gap-1 text-sm text-gold-600">
                       <Star className="h-4 w-4 fill-current" />
-                      {t.rating_avg?.toFixed(1) ?? '—'}
-                      <span className="text-gray-400">({t.rating_count ?? 0})</span>
+                      {teacher.rating_avg?.toFixed(1) ?? '—'}
+                      <span className="text-gray-400">({teacher.rating_count ?? 0})</span>
                     </div>
-                    <span className="font-semibold text-brand-700">${t.hourly_price ?? '—'}/hr</span>
+                    <span className="font-semibold text-brand-700">{teacher.currency} {teacher.hourly_price ?? '—'}{t('teacherSearch.perHour')}</span>
                   </div>
-                  <Link to={`/teachers/${t.id}`} className="mt-4 block">
+                  <Link to={`/teachers/${teacher.id}`} className="mt-4 block">
                     <Button size="sm" className="w-full">
-                      View Profile
+                      {t('common.viewProfile')}
                     </Button>
                   </Link>
                 </CardBody>

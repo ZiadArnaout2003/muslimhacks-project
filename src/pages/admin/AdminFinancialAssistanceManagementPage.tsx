@@ -7,10 +7,10 @@ import { Button } from '../../components/ui/Button'
 import { Input, Textarea } from '../../components/ui/Input'
 import { LoadingState, EmptyState } from '../../components/ui/States'
 import type { AssistanceStatus, FinancialAssistanceApplication } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 interface ApplicationRow extends FinancialAssistanceApplication {
   students: { first_name: string; last_name: string } | null
-  parents: { profiles: { first_name: string; last_name: string; email: string } | null } | null
 }
 
 const STATUS_TONE: Record<AssistanceStatus, 'neutral' | 'brand' | 'success' | 'warning' | 'danger'> = {
@@ -24,11 +24,12 @@ const STATUS_TONE: Record<AssistanceStatus, 'neutral' | 'brand' | 'success' | 'w
 }
 
 export function AdminFinancialAssistanceManagementPage() {
+  const { t } = useTranslation()
   const { data: applications, loading } = useSupabaseQuery<ApplicationRow[]>(
     () =>
       supabase
         .from('financial_assistance_applications')
-        .select('*, students(first_name, last_name), parents(profiles(first_name, last_name, email))')
+        .select('*, students(first_name, last_name)')
         .order('created_at', { ascending: false }),
     []
   )
@@ -37,11 +38,11 @@ export function AdminFinancialAssistanceManagementPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Financial Assistance Management</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('admin.assistanceManagement')}</h1>
 
       <div className="mt-6 space-y-3">
         {loading && <LoadingState />}
-        {!loading && (applications ?? []).length === 0 && <EmptyState title="No applications" />}
+        {!loading && (applications ?? []).length === 0 && <EmptyState title={t('admin.noApplications')} />}
         {(applications ?? []).map((app) => (
           <Card key={app.id}>
             <CardBody>
@@ -51,17 +52,16 @@ export function AdminFinancialAssistanceManagementPage() {
                     {app.students?.first_name} {app.students?.last_name}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Parent: {app.parents?.profiles?.first_name} {app.parents?.profiles?.last_name} ·{' '}
                     {new Date(app.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge tone={STATUS_TONE[app.status]}>
-                    {app.status.replace('_', ' ')}
+                    {t(`admin.assistanceStatuses.${app.status}`)}
                     {app.approved_percent ? ` · ${app.approved_percent}%` : ''}
                   </Badge>
                   <Button size="sm" variant="outline" onClick={() => setOpenId(openId === app.id ? null : app.id)}>
-                    {openId === app.id ? 'Close' : 'Review'}
+                    {openId === app.id ? t('admin.close') : t('admin.review')}
                   </Button>
                 </div>
               </div>
@@ -76,6 +76,7 @@ export function AdminFinancialAssistanceManagementPage() {
 }
 
 function ReviewPanel({ app }: { app: ApplicationRow }) {
+  const { t } = useTranslation()
   const [percent, setPercent] = useState(app.approved_percent?.toString() ?? '50')
   const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
@@ -101,39 +102,39 @@ function ReviewPanel({ app }: { app: ApplicationRow }) {
     <div className="mt-4 space-y-3 border-t border-gray-100 pt-4 text-sm">
       <div className="grid grid-cols-3 gap-3">
         <div>
-          <p className="text-gray-400">Household size</p>
+          <p className="text-gray-400">{t('admin.householdSize')}</p>
           <p className="text-gray-800">{app.household_size}</p>
         </div>
         <div>
-          <p className="text-gray-400">Dependents</p>
+          <p className="text-gray-400">{t('admin.dependents')}</p>
           <p className="text-gray-800">{app.dependents}</p>
         </div>
         <div>
-          <p className="text-gray-400">Income range</p>
+          <p className="text-gray-400">{t('admin.incomeRange')}</p>
           <p className="text-gray-800">{app.income_range}</p>
         </div>
       </div>
       <div>
-        <p className="text-gray-400">Reason</p>
+        <p className="text-gray-400">{t('admin.reason')}</p>
         <p className="text-gray-800">{app.reason}</p>
       </div>
 
-      <Textarea placeholder="Internal note (not visible to the family)" rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
+      <Textarea placeholder={t('admin.internalNote')} rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
 
       <div className="flex flex-wrap items-center gap-2">
         <Input type="number" min={1} max={99} className="w-24" value={percent} onChange={(e) => setPercent(e.target.value)} />
-        <span className="text-xs text-gray-500">% reduction</span>
+        <span className="text-xs text-gray-500">{t('admin.percentReduction')}</span>
         <Button size="sm" loading={busy} onClick={() => decide('partially_approved')}>
-          Approve Partial
+          {t('admin.approvePartial')}
         </Button>
         <Button size="sm" loading={busy} onClick={() => decide('approved')}>
-          Approve Full
+          {t('admin.approveFull')}
         </Button>
         <Button size="sm" variant="outline" loading={busy} onClick={() => decide('interview_scheduled')}>
-          Schedule Interview
+          {t('admin.scheduleInterview')}
         </Button>
         <Button size="sm" variant="danger" loading={busy} onClick={() => decide('rejected')}>
-          Reject
+          {t('admin.reject')}
         </Button>
       </div>
     </div>

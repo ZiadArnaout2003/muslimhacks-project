@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button'
 import { LoadingState, ErrorState } from '../../components/ui/States'
 import { useAuth } from '../../contexts/AuthContext'
 import type { Course, Subject } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 interface CourseModule2 {
   id: string
@@ -15,6 +16,7 @@ interface CourseModule2 {
 }
 
 export function CourseDetailsPage() {
+  const { t } = useTranslation()
   const { courseId = '' } = useParams()
   const { profile } = useAuth()
 
@@ -33,38 +35,32 @@ export function CourseDetailsPage() {
     [courseId]
   )
 
-  const { data: teacherRows } = useSupabaseQuery<{ first_name: string; last_name: string }[]>(
-    () => supabase.rpc('public_teacher_profile', { p_teacher_id: course?.teacher_id ?? '' }),
-    [course?.teacher_id]
-  )
-
-  if (loading) return <LoadingState label="Loading course…" />
+  if (loading) return <LoadingState label={t('courseDetails.loading')} />
   if (error) return <ErrorState message={error} />
-  if (!course) return <ErrorState message="This course could not be found or is not published." />
+  if (!course) return <ErrorState message={t('courseDetails.notFound')} />
 
-  const teacher = teacherRows?.[0]
-  const enrollHref = profile?.role === 'parent' ? `/checkout?type=course&courseId=${course.id}` : '/register'
+  const enrollHref = profile?.role === 'student' ? `/student/checkout?type=course&courseId=${course.id}` : '/register'
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="flex items-center gap-2">
-            <Badge tone={course.is_islamic ? 'warning' : 'brand'}>{course.is_islamic ? 'Islamic' : 'Academic'}</Badge>
-            <Badge tone="neutral">{course.delivery_mode}</Badge>
+            <Badge tone={course.is_islamic ? 'warning' : 'brand'}>{course.is_islamic ? t('courses.islamic') : t('courses.academic')}</Badge>
+            <Badge tone="neutral">{t(`catalogue.modes.${course.delivery_mode}`)}</Badge>
             {course.is_islamic && course.islamic_review_status === 'approved' && (
-              <Badge tone="success">Scholar Reviewed</Badge>
+              <Badge tone="success">{t('courseDetails.scholarReviewed')}</Badge>
             )}
           </div>
           <h1 className="mt-3 text-2xl font-bold text-gray-900">{course.title}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {subject?.name} · {course.level} · Taught by {teacher ? `${teacher.first_name} ${teacher.last_name}` : '—'}
+            {subject?.name} · {course.level}
           </p>
           <p className="mt-4 text-gray-600">{course.description}</p>
 
           <Card className="mt-6">
             <CardBody>
-              <h2 className="font-semibold text-gray-900">Course Outline</h2>
+              <h2 className="font-semibold text-gray-900">{t('courseDetails.outline')}</h2>
               <ol className="mt-3 space-y-2">
                 {(modules ?? []).map((m, i) => (
                   <li key={m.id} className="flex items-center gap-3 rounded-lg bg-gray-50 px-3 py-2 text-sm">
@@ -74,7 +70,7 @@ export function CourseDetailsPage() {
                     {m.title}
                   </li>
                 ))}
-                {(modules ?? []).length === 0 && <p className="text-sm text-gray-500">Outline coming soon.</p>}
+                {(modules ?? []).length === 0 && <p className="text-sm text-gray-500">{t('courseDetails.outlineSoon')}</p>}
               </ol>
             </CardBody>
           </Card>
@@ -86,12 +82,12 @@ export function CourseDetailsPage() {
               <p className="text-2xl font-bold text-brand-700">
                 ${course.price} <span className="text-sm font-normal text-gray-500">{course.currency}</span>
               </p>
-              <p className="text-sm text-gray-500">{course.duration_hours} hours total</p>
+              <p className="text-sm text-gray-500">{t('courseDetails.hoursTotal', { count: course.duration_hours })}</p>
               <Link to={enrollHref}>
-                <Button className="w-full">Enroll</Button>
+                <Button className="w-full">{t('common.enroll')}</Button>
               </Link>
               <Button variant="outline" className="w-full">
-                Add to Wishlist
+                {t('courseDetails.addWishlist')}
               </Button>
             </CardBody>
           </Card>

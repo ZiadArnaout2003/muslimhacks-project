@@ -8,8 +8,10 @@ import { Button } from '../../components/ui/Button'
 import { Select } from '../../components/ui/Input'
 import { LoadingState, EmptyState, ErrorState } from '../../components/ui/States'
 import type { Course, Subject } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 export function CourseCataloguePage() {
+  const { t } = useTranslation()
   const [params] = useSearchParams()
   const [subjectId, setSubjectId] = useState('')
   const [category, setCategory] = useState(params.get('category') ?? '')
@@ -35,12 +37,12 @@ export function CourseCataloguePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900">Course Catalogue</h1>
-      <p className="mt-1 text-sm text-gray-500">Academic and Islamic courses, live or recorded.</p>
+      <h1 className="text-2xl font-bold text-gray-900">{t('catalogue.title')}</h1>
+      <p className="mt-1 text-sm text-gray-500">{t('catalogue.subtitle')}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-3 rounded-xl border border-black/5 bg-white p-4 sm:grid-cols-4">
         <Select value={subjectId} onChange={(e) => setSubjectId(e.target.value)}>
-          <option value="">All subjects</option>
+          <option value="">{t('catalogue.allSubjects')}</option>
           {(subjects ?? []).map((s) => (
             <option key={s.id} value={s.id}>
               {s.name}
@@ -48,30 +50,31 @@ export function CourseCataloguePage() {
           ))}
         </Select>
         <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">Academic & Islamic</option>
-          <option value="academic">Academic only</option>
-          <option value="islamic">Islamic only</option>
+          <option value="">{t('catalogue.allCategories')}</option>
+          <option value="academic">{t('catalogue.academicOnly')}</option>
+          <option value="islamic">{t('catalogue.islamicOnly')}</option>
         </Select>
         <Select value={mode} onChange={(e) => setMode(e.target.value)}>
-          <option value="">Live & Recorded</option>
-          <option value="live">Live</option>
-          <option value="recorded">Recorded</option>
-          <option value="hybrid">Hybrid</option>
+          <option value="">{t('catalogue.allModes')}</option>
+          <option value="live">{t('catalogue.modes.live')}</option>
+          <option value="recorded">{t('catalogue.modes.recorded')}</option>
+          <option value="hybrid">{t('catalogue.modes.hybrid')}</option>
         </Select>
       </div>
 
       <div className="mt-8">
-        {loading && <LoadingState label="Loading courses…" />}
+        {loading && <LoadingState label={t('catalogue.loading')} />}
         {error && <ErrorState message={error} />}
-        {!loading && filtered.length === 0 && <EmptyState title="No courses match your filters" />}
+        {!loading && filtered.length === 0 && <EmptyState title={t('catalogue.empty')} />}
         {!loading && filtered.length > 0 && (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((c) => (
               <Card key={c.id}>
+                <div className="h-1.5 rounded-t-xl" style={{ backgroundColor: c.color }} />
                 <CardBody>
                   <div className="flex items-center gap-2">
-                    <Badge tone={c.is_islamic ? 'warning' : 'brand'}>{c.is_islamic ? 'Islamic' : 'Academic'}</Badge>
-                    <Badge tone="neutral">{c.delivery_mode}</Badge>
+                    <Badge tone={c.is_islamic ? 'warning' : 'brand'}>{c.is_islamic ? t('courses.islamic') : t('courses.academic')}</Badge>
+                    <Badge tone="neutral">{t(`catalogue.modes.${c.delivery_mode}`)}</Badge>
                   </div>
                   <h3 className="mt-3 font-semibold text-gray-900">{c.title}</h3>
                   <p className="text-xs text-gray-500">
@@ -82,7 +85,7 @@ export function CourseCataloguePage() {
                     <span className="font-semibold text-brand-700">${c.price}</span>
                     <Link to={`/courses/${c.id}`}>
                       <Button size="sm" variant="outline">
-                        View Course
+                        {t('home.featured.viewCourse')}
                       </Button>
                     </Link>
                   </div>

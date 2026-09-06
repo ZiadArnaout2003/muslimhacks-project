@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Users, Video, BookOpen, ClipboardList, CreditCard, AlertCircle } from 'lucide-react'
 import { supabase } from '../../lib/supabaseClient'
@@ -39,6 +40,7 @@ interface AssignmentDue {
 }
 
 export function ParentDashboardPage() {
+  const { t } = useTranslation()
   const { session } = useAuth()
   const parentId = session?.user.id ?? ''
 
@@ -100,16 +102,16 @@ export function ParentDashboardPage() {
 
   const pendingPayments = (invoices ?? []).filter((i) => i.status === 'pending' || i.status === 'overdue')
 
-  if (childrenLoading) return <LoadingState label="Loading your family…" />
+  if (childrenLoading) return <LoadingState label={t('parentDashboard.loading')} />
 
   if (!children || children.length === 0) {
     return (
       <EmptyState
-        title="No children added yet"
-        description="Add your child's profile to start booking classes and enrolling in courses."
+        title={t('parentDashboard.noChildren')}
+        description={t('parentDashboard.noChildrenDescription')}
         action={
           <Link to="/parent/onboarding">
-            <Button>Add a Child</Button>
+            <Button>{t('children.add')}</Button>
           </Link>
         }
       />
@@ -119,10 +121,10 @@ export function ParentDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-gray-900">Parent Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('parentDashboard.title')}</h1>
         {children.length > 1 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Select Student:</span>
+            <span className="text-sm text-gray-500">{t('parentDashboard.selectStudent')}</span>
             <div className="flex gap-1 rounded-lg border border-gray-200 bg-white p-1">
               {children.map((c) => (
                 <button
@@ -141,18 +143,18 @@ export function ParentDashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard icon={Users} label="Children" value={children.length} />
-        <StatCard icon={Video} label="Upcoming Classes" value={upcoming.length} />
-        <StatCard icon={BookOpen} label="Active Courses" value={(enrollments ?? []).filter((e) => e.status === 'active').length} />
-        <StatCard icon={CreditCard} label="Payments Due" value={pendingPayments.length} />
+        <StatCard icon={Users} label={t('dashboard.children')} value={children.length} />
+        <StatCard icon={Video} label={t('parentDashboard.upcomingClasses')} value={upcoming.length} />
+        <StatCard icon={BookOpen} label={t('parentDashboard.activeCourses')} value={(enrollments ?? []).filter((e) => e.status === 'active').length} />
+        <StatCard icon={CreditCard} label={t('parentDashboard.paymentsDue')} value={pendingPayments.length} />
       </div>
 
       {pendingPayments.length > 0 && (
         <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           <AlertCircle className="h-5 w-5 shrink-0" />
-          You have {pendingPayments.length} payment(s) pending.{' '}
+          {t('parentDashboard.pendingPayments', { count: pendingPayments.length })}{' '}
           <Link to="/parent/payments" className="font-medium underline">
-            View payments
+            {t('parentDashboard.viewPayments')}
           </Link>
         </div>
       )}
@@ -161,10 +163,10 @@ export function ParentDashboardPage() {
         <Card className="lg:col-span-2">
           <CardBody>
             <h2 className="flex items-center gap-2 font-semibold text-gray-900">
-              <Video className="h-4 w-4" /> Upcoming Classes
+              <Video className="h-4 w-4" /> {t('parentDashboard.upcomingClasses')}
             </h2>
             <div className="mt-3 space-y-2">
-              {upcoming.length === 0 && <p className="text-sm text-gray-500">No upcoming classes scheduled.</p>}
+              {upcoming.length === 0 && <p className="text-sm text-gray-500">{t('parentDashboard.noUpcomingClasses')}</p>}
               {upcoming.map((row) => {
                 const cls = row.classes!
                 const isSoon = new Date(cls.start_datetime).getTime() - Date.now() < 15 * 60 * 1000
@@ -178,7 +180,7 @@ export function ParentDashboardPage() {
                       </p>
                     </div>
                     <Button size="sm" disabled={!isSoon}>
-                      Join Class
+                      {t('parentBookings.joinClass')}
                     </Button>
                   </div>
                 )
@@ -190,18 +192,18 @@ export function ParentDashboardPage() {
         <Card>
           <CardBody>
             <h2 className="flex items-center gap-2 font-semibold text-gray-900">
-              <ClipboardList className="h-4 w-4" /> Assignment Alerts
+              <ClipboardList className="h-4 w-4" /> {t('parentDashboard.assignmentAlerts')}
             </h2>
             <div className="mt-3 space-y-2">
               {(assignments ?? []).slice(0, 5).map((a) => (
                 <div key={a.id} className="rounded-lg bg-gray-50 px-3 py-2 text-sm">
                   <p className="font-medium text-gray-800">{a.title}</p>
                   <p className="text-xs text-gray-500">
-                    {a.courses?.title} · Due {a.due_date ? new Date(a.due_date).toLocaleDateString() : '—'}
+                    {a.courses?.title} · {t('parentDashboard.due', { date: a.due_date ? new Date(a.due_date).toLocaleDateString() : '—' })}
                   </p>
                 </div>
               ))}
-              {(assignments ?? []).length === 0 && <p className="text-sm text-gray-500">No upcoming deadlines.</p>}
+              {(assignments ?? []).length === 0 && <p className="text-sm text-gray-500">{t('parentDashboard.noDeadlines')}</p>}
             </div>
           </CardBody>
         </Card>
@@ -210,14 +212,14 @@ export function ParentDashboardPage() {
       <Card>
         <CardBody>
           <h2 className="flex items-center gap-2 font-semibold text-gray-900">
-            <BookOpen className="h-4 w-4" /> {activeStudent?.first_name}'s Progress
+            <BookOpen className="h-4 w-4" /> {t('parentDashboard.studentProgress', { name: activeStudent?.first_name })}
           </h2>
           <div className="mt-3 space-y-3">
             {(enrollments ?? []).map((e) => (
               <div key={e.id}>
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium text-gray-800">
-                    {e.courses?.title} {e.courses?.is_islamic && <Badge tone="warning">Islamic</Badge>}
+                    {e.courses?.title} {e.courses?.is_islamic && <Badge tone="warning">{t('courses.islamic')}</Badge>}
                   </span>
                   <span className="text-gray-500">{e.progress_percent}%</span>
                 </div>
@@ -226,7 +228,7 @@ export function ParentDashboardPage() {
                 </div>
               </div>
             ))}
-            {(enrollments ?? []).length === 0 && <p className="text-sm text-gray-500">Not enrolled in any courses yet.</p>}
+            {(enrollments ?? []).length === 0 && <p className="text-sm text-gray-500">{t('parentDashboard.noCourses')}</p>}
           </div>
         </CardBody>
       </Card>

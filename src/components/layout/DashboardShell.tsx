@@ -9,7 +9,6 @@ import {
   CreditCard,
   HandCoins,
   GraduationCap,
-  MessageSquare,
   Settings,
   Bell,
   BarChart3,
@@ -18,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import type { UserRole } from '../../types/database'
+import { useTranslation } from 'react-i18next'
 
 interface NavItem {
   to: string
@@ -26,40 +26,34 @@ interface NavItem {
 }
 
 const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
-  parent: [
-    { to: '/parent/dashboard', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
-    { to: '/parent/children', label: 'My Children', icon: <Users className="h-4 w-4" /> },
-    { to: '/teachers', label: 'Find a Teacher', icon: <GraduationCap className="h-4 w-4" /> },
-    { to: '/parent/bookings', label: 'Bookings & Schedule', icon: <CalendarDays className="h-4 w-4" /> },
-    { to: '/parent/payments', label: 'Payments & Invoices', icon: <CreditCard className="h-4 w-4" /> },
-    { to: '/parent/financial-assistance', label: 'Financial Assistance', icon: <HandCoins className="h-4 w-4" /> },
-    { to: '/parent/messages', label: 'Messages', icon: <MessageSquare className="h-4 w-4" /> },
-    { to: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
-  ],
   student: [
-    { to: '/student/dashboard', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
-    { to: '/student/courses', label: 'My Courses', icon: <BookOpen className="h-4 w-4" /> },
-    { to: '/student/assignments', label: 'Assignments', icon: <ClipboardList className="h-4 w-4" /> },
-    { to: '/student/progress', label: 'Progress', icon: <BarChart3 className="h-4 w-4" /> },
-    { to: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+    { to: '/student/dashboard', label: 'dashboard.overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+    { to: '/student/courses', label: 'dashboard.courses', icon: <BookOpen className="h-4 w-4" /> },
+    { to: '/student/assignments', label: 'dashboard.assignments', icon: <ClipboardList className="h-4 w-4" /> },
+    { to: '/student/progress', label: 'dashboard.progress', icon: <BarChart3 className="h-4 w-4" /> },
+    { to: '/teachers', label: 'nav.teachers', icon: <GraduationCap className="h-4 w-4" /> },
+    { to: '/student/bookings', label: 'dashboard.bookings', icon: <CalendarDays className="h-4 w-4" /> },
+    { to: '/student/payments', label: 'dashboard.payments', icon: <CreditCard className="h-4 w-4" /> },
+    { to: '/student/financial-assistance', label: 'nav.financialAssistance', icon: <HandCoins className="h-4 w-4" /> },
+    { to: '/settings', label: 'dashboard.settings', icon: <Settings className="h-4 w-4" /> },
   ],
   teacher: [
-    { to: '/teacher/dashboard', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
-    { to: '/teacher/classes', label: 'My Classes', icon: <Video className="h-4 w-4" /> },
-    { to: '/teacher/courses', label: 'My Courses', icon: <BookOpen className="h-4 w-4" /> },
-    { to: '/teacher/availability', label: 'Availability', icon: <CalendarDays className="h-4 w-4" /> },
-    { to: '/teacher/application-status', label: 'Application Status', icon: <ShieldCheck className="h-4 w-4" /> },
-    { to: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+    { to: '/teacher/dashboard', label: 'dashboard.overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+    { to: '/teacher/courses', label: 'teacherNav.courses', icon: <BookOpen className="h-4 w-4" /> },
+    { to: '/teacher/classes', label: 'teacherNav.classes', icon: <Video className="h-4 w-4" /> },
+    { to: '/teacher/availability', label: 'teacherNav.availability', icon: <CalendarDays className="h-4 w-4" /> },
+    { to: '/teacher/application-status', label: 'teacherNav.applicationStatus', icon: <ShieldCheck className="h-4 w-4" /> },
+    { to: '/settings', label: 'dashboard.settings', icon: <Settings className="h-4 w-4" /> },
   ],
   admin: [
-    { to: '/admin/dashboard', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
-    { to: '/admin/teachers', label: 'Teachers', icon: <GraduationCap className="h-4 w-4" /> },
-    { to: '/admin/students', label: 'Students', icon: <Users className="h-4 w-4" /> },
-    { to: '/admin/courses', label: 'Courses', icon: <BookOpen className="h-4 w-4" /> },
-    { to: '/admin/schedule', label: 'Schedule', icon: <CalendarDays className="h-4 w-4" /> },
-    { to: '/admin/financial-assistance', label: 'Financial Assistance', icon: <HandCoins className="h-4 w-4" /> },
-    { to: '/admin/reports', label: 'Reports', icon: <BarChart3 className="h-4 w-4" /> },
-    { to: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+    { to: '/admin/dashboard', label: 'dashboard.overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+    { to: '/admin/teachers', label: 'teacherNav.teachers', icon: <GraduationCap className="h-4 w-4" /> },
+    { to: '/admin/students', label: 'teacherNav.students', icon: <Users className="h-4 w-4" /> },
+    { to: '/admin/courses', label: 'nav.courses', icon: <BookOpen className="h-4 w-4" /> },
+    { to: '/admin/schedule', label: 'teacherNav.schedule', icon: <CalendarDays className="h-4 w-4" /> },
+    { to: '/admin/financial-assistance', label: 'nav.financialAssistance', icon: <HandCoins className="h-4 w-4" /> },
+    { to: '/admin/reports', label: 'teacherNav.reports', icon: <BarChart3 className="h-4 w-4" /> },
+    { to: '/settings', label: 'dashboard.settings', icon: <Settings className="h-4 w-4" /> },
   ],
   scholar: [
     { to: '/admin/islamic-review', label: 'Content Review', icon: <ShieldCheck className="h-4 w-4" /> },
@@ -68,6 +62,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
 }
 
 export function DashboardShell() {
+  const { t } = useTranslation()
   const { profile, signOut } = useAuth()
   const navigate = useNavigate()
 
@@ -98,16 +93,16 @@ export function DashboardShell() {
               }
             >
               {item.icon}
-              {item.label}
+              {t(item.label)}
             </NavLink>
           ))}
         </nav>
         <div className="border-t border-black/5 p-4 text-xs text-gray-500">
-          Signed in as
+          {t('dashboard.signedInAs')}
           <div className="font-medium text-gray-800">
             {profile.first_name} {profile.last_name}
           </div>
-          <div className="capitalize">{profile.role}</div>
+          <div>{t(`dashboard.roles.${profile.role}`)}</div>
         </div>
       </aside>
 
@@ -116,11 +111,11 @@ export function DashboardShell() {
           <span className="text-sm text-gray-500 md:hidden">Al-Noor</span>
           <div className="hidden text-sm text-gray-500 md:block" />
           <div className="flex items-center gap-4">
-            <button className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100" aria-label="Notifications">
+            <button className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100" aria-label={t('dashboard.notifications')}>
               <Bell className="h-5 w-5" />
             </button>
             <button onClick={handleLogout} className="text-sm font-medium text-gray-600 hover:text-brand-700">
-              Log out
+              {t('nav.logout')}
             </button>
           </div>
         </header>

@@ -59,10 +59,6 @@ $$;
 create or replace function teaches_student(p_student_id uuid) returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (
-    select 1 from enrollments e
-    join courses c on c.id = e.course_id
-    where e.student_id = p_student_id and c.teacher_id = auth.uid()
-    union
     select 1 from class_students cs
     join classes cl on cl.id = cs.class_id
     where cs.student_id = p_student_id and cl.teacher_id = auth.uid()
@@ -240,16 +236,15 @@ alter table courses enable row level security;
 create policy courses_select on courses for select
   using (
     status = 'published'
-    or teacher_id = auth.uid()
     or is_admin()
     or (is_scholar() and is_islamic)
   );
 
 create policy courses_write_owner on courses for insert
-  with check (is_admin() or (teacher_id = auth.uid() and is_approved_teacher()));
+  with check (is_admin());
 
 create policy courses_update_owner on courses for update
-  using (is_admin() or (teacher_id = auth.uid() and is_approved_teacher()) or (is_scholar() and is_islamic));
+  using (is_admin() or (is_scholar() and is_islamic));
 
 -- ----------------------------------------------------------------------------
 -- course_modules — outline is visible for published courses (marketing),
@@ -260,21 +255,18 @@ alter table course_modules enable row level security;
 create policy course_modules_select on course_modules for select
   using (
     exists (select 1 from courses c where c.id = course_id and c.status = 'published')
-    or exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin()))
+    or is_admin()
   );
 
 create policy course_modules_write_owner on course_modules for all
-  using (exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin())))
-  with check (exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin())));
+  using (is_admin())
+  with check (is_admin());
 
 alter table lessons enable row level security;
 
 create policy lessons_select on lessons for select
   using (
-    exists (
-      select 1 from course_modules m join courses c on c.id = m.course_id
-      where m.id = module_id and (c.teacher_id = auth.uid() or is_admin())
-    )
+    is_admin()
     or exists (
       select 1 from course_modules m
       join courses c on c.id = m.course_id
@@ -284,14 +276,8 @@ create policy lessons_select on lessons for select
   );
 
 create policy lessons_write_owner on lessons for all
-  using (exists (
-    select 1 from course_modules m join courses c on c.id = m.course_id
-    where m.id = module_id and (c.teacher_id = auth.uid() or is_admin())
-  ))
-  with check (exists (
-    select 1 from course_modules m join courses c on c.id = m.course_id
-    where m.id = module_id and (c.teacher_id = auth.uid() or is_admin())
-  ));
+  using (is_admin())
+  with check (is_admin());
 
 -- ----------------------------------------------------------------------------
 -- enrollments / lesson_progress
@@ -302,7 +288,6 @@ create policy enrollments_select on enrollments for select
   using (
     owns_student(student_id)
     or is_admin()
-    or exists (select 1 from courses c where c.id = course_id and c.teacher_id = auth.uid())
   );
 
 create policy enrollments_insert on enrollments for insert
@@ -315,8 +300,7 @@ alter table lesson_progress enable row level security;
 
 create policy lesson_progress_select on lesson_progress for select
   using (
-    exists (select 1 from enrollments e where e.id = enrollment_id and (owns_student(e.student_id) or is_admin()
-      or exists (select 1 from courses c where c.id = e.course_id and c.teacher_id = auth.uid())))
+    exists (select 1 from enrollments e where e.id = enrollment_id and (owns_student(e.student_id) or is_admin()))
   );
 
 create policy lesson_progress_write on lesson_progress for all
@@ -398,15 +382,15 @@ alter table assignments enable row level security;
 
 create policy assignments_select on assignments for select
   using (
-    exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin()))
+    is_admin()
     or exists (
       select 1 from enrollments e where e.course_id = course_id and owns_student(e.student_id) and e.status = 'active'
     )
   );
 
 create policy assignments_write_owner on assignments for all
-  using (exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin())))
-  with check (exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin())));
+  using (is_admin())
+  with check (is_admin());
 
 alter table submissions enable row level security;
 
@@ -414,10 +398,6 @@ create policy submissions_select on submissions for select
   using (
     owns_student(student_id)
     or is_admin()
-    or exists (
-      select 1 from assignments a join courses c on c.id = a.course_id
-      where a.id = assignment_id and c.teacher_id = auth.uid()
-    )
   );
 
 create policy submissions_insert on submissions for insert
@@ -427,25 +407,14 @@ create policy submissions_update on submissions for update
   using (
     owns_student(student_id)
     or is_admin()
-    or exists (
-      select 1 from assignments a join courses c on c.id = a.course_id
-      where a.id = assignment_id and c.teacher_id = auth.uid()
-    )
   );
 
 -- Students can update their own answer/file/status, but only a teacher/admin
 -- may set grade & feedback.
 create or replace function guard_submission_grade() returns trigger
 language plpgsql security definer set search_path = public as $$
-declare
-  is_owning_teacher boolean;
 begin
-  select exists (
-    select 1 from assignments a join courses c on c.id = a.course_id
-    where a.id = new.assignment_id and c.teacher_id = auth.uid()
-  ) into is_owning_teacher;
-
-  if not (is_admin() or is_owning_teacher) then
+  if not is_admin() then
     new.grade = old.grade;
     new.feedback = old.feedback;
     new.graded_by = old.graded_by;
@@ -469,33 +438,22 @@ alter table quizzes enable row level security;
 
 create policy quizzes_select on quizzes for select
   using (
-    exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin()))
+    is_admin()
     or exists (select 1 from enrollments e where e.course_id = course_id and owns_student(e.student_id))
   );
 
 create policy quizzes_write_owner on quizzes for all
-  using (exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin())))
-  with check (exists (select 1 from courses c where c.id = course_id and (c.teacher_id = auth.uid() or is_admin())));
+  using (is_admin())
+  with check (is_admin());
 
 alter table quiz_questions enable row level security;
 
 create policy quiz_questions_select_owner_only on quiz_questions for select
-  using (
-    exists (
-      select 1 from quizzes q join courses c on c.id = q.course_id
-      where q.id = quiz_id and (c.teacher_id = auth.uid() or is_admin())
-    )
-  );
+  using (is_admin());
 
 create policy quiz_questions_write_owner on quiz_questions for all
-  using (exists (
-    select 1 from quizzes q join courses c on c.id = q.course_id
-    where q.id = quiz_id and (c.teacher_id = auth.uid() or is_admin())
-  ))
-  with check (exists (
-    select 1 from quizzes q join courses c on c.id = q.course_id
-    where q.id = quiz_id and (c.teacher_id = auth.uid() or is_admin())
-  ));
+  using (is_admin())
+  with check (is_admin());
 
 -- Students get NO direct SELECT policy on quiz_questions: RLS is row-level,
 -- not column-level, so any policy granting them a row would hand back
@@ -529,7 +487,6 @@ create policy quiz_attempts_select on quiz_attempts for select
   using (
     owns_student(student_id)
     or is_admin()
-    or exists (select 1 from quizzes q join courses c on c.id = q.course_id where q.id = quiz_id and c.teacher_id = auth.uid())
   );
 
 -- Attempts are only ever written by the grading RPC (security definer), not directly.
@@ -649,11 +606,11 @@ begin
   if new.context = 'student_teacher' then
     if not exists (
       select 1 from students s
-      join enrollments e on e.student_id = s.id
-      join courses c on c.id = e.course_id
-      where s.profile_id = any(new.participant_ids) and c.teacher_id = any(new.participant_ids)
+      join class_students cs on cs.student_id = s.id
+      join classes cl on cl.id = cs.class_id
+      where s.profile_id = any(new.participant_ids) and cl.teacher_id = any(new.participant_ids)
     ) then
-      raise exception 'student-teacher messaging requires an active enrollment';
+      raise exception 'student-teacher messaging requires a booked class';
     end if;
   end if;
   return new;
@@ -711,7 +668,6 @@ alter table islamic_content_reviews enable row level security;
 create policy icr_select on islamic_content_reviews for select
   using (
     is_admin() or is_scholar()
-    or exists (select 1 from courses c where c.id = course_id and c.teacher_id = auth.uid())
   );
 
 create policy icr_write on islamic_content_reviews for all

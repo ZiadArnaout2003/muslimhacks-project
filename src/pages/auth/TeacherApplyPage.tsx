@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import { uploadTeacherDocument } from '../../lib/storage'
@@ -9,8 +10,10 @@ import { COUNTRIES, GRADE_LEVELS, LANGUAGES } from '../../lib/constants'
 import { COMMON_TIMEZONES } from '../../lib/timezone'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import type { Subject } from '../../types/database'
+import { getAuthErrorMessage } from '../../lib/authErrors'
 
 export function TeacherApplyPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { data: subjects } = useSupabaseQuery<Subject[]>(() => supabase.from('subjects').select('*').order('name'), [])
 
@@ -38,9 +41,9 @@ export function TeacherApplyPage() {
     e.preventDefault()
     setError(null)
 
-    if (!consent) return setError('You must accept the privacy/consent notice to apply.')
-    if (subjectSelections.length === 0) return setError('Select at least one subject you can teach.')
-    if (form.password.length < 8) return setError('Password must be at least 8 characters.')
+    if (!consent) return setError(t('teacherApply.consentRequired'))
+    if (subjectSelections.length === 0) return setError(t('teacherApply.subjectRequired'))
+    if (form.password.length < 8) return setError(t('auth.errors.passwordLength'))
 
     setLoading(true)
     try {
@@ -49,7 +52,7 @@ export function TeacherApplyPage() {
         password: form.password,
         options: {
           data: {
-            role: 'teacher',
+            signup_kind: 'teacher_application',
             first_name: form.firstName,
             last_name: form.lastName,
             phone: form.phone,
@@ -57,7 +60,7 @@ export function TeacherApplyPage() {
           },
         },
       })
-      if (signUpError) throw new Error(signUpError.message)
+      if (signUpError) throw new Error(getAuthErrorMessage(signUpError))
 
       // Establish a session so the RLS-protected inserts/uploads below can run.
       // (Requires "Confirm email" disabled in Supabase Auth settings for demo use.)
@@ -116,7 +119,7 @@ export function TeacherApplyPage() {
 
       navigate('/teacher/application-status')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong submitting your application.')
+      setError(err instanceof Error ? err.message : t('teacherApply.submitError'))
     } finally {
       setLoading(false)
     }
@@ -124,42 +127,42 @@ export function TeacherApplyPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900">Become a Teacher</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('teacherApply.title')}</h1>
       <p className="mt-1 text-sm text-gray-500">
-        Applications are reviewed by our administration team before you can start teaching.
+        {t('teacherApply.subtitle')}
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-6">
         <Card>
           <CardBody className="space-y-4">
-            <h2 className="font-semibold text-gray-900">Personal Information</h2>
+            <h2 className="font-semibold text-gray-900">{t('teacherApply.personal')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="firstName">First name</Label>
+                <Label htmlFor="firstName">{t('auth.fields.firstName')}</Label>
                 <Input id="firstName" required value={form.firstName} onChange={update('firstName')} />
               </div>
               <div>
-                <Label htmlFor="lastName">Last name</Label>
+                <Label htmlFor="lastName">{t('auth.fields.lastName')}</Label>
                 <Input id="lastName" required value={form.lastName} onChange={update('lastName')} />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.fields.email')}</Label>
                 <Input id="email" type="email" required value={form.email} onChange={update('email')} />
               </div>
               <div>
-                <Label htmlFor="password">Create a password</Label>
+                <Label htmlFor="password">{t('teacherApply.createPassword')}</Label>
                 <Input id="password" type="password" required value={form.password} onChange={update('password')} />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="phone">Phone number</Label>
+                <Label htmlFor="phone">{t('auth.fields.phone')}</Label>
                 <Input id="phone" type="tel" value={form.phone} onChange={update('phone')} />
               </div>
               <div>
-                <Label htmlFor="country">Country</Label>
+                <Label htmlFor="country">{t('auth.fields.country')}</Label>
                 <Select id="country" value={form.country} onChange={update('country')}>
                   {COUNTRIES.map((c) => (
                     <option key={c}>{c}</option>
@@ -167,7 +170,7 @@ export function TeacherApplyPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="timezone">Timezone</Label>
+                <Label htmlFor="timezone">{t('settings.timezone')}</Label>
                 <Select id="timezone" value={form.timezone} onChange={update('timezone')}>
                   {COMMON_TIMEZONES.map((tz) => (
                     <option key={tz}>{tz}</option>
@@ -180,9 +183,9 @@ export function TeacherApplyPage() {
 
         <Card>
           <CardBody className="space-y-4">
-            <h2 className="font-semibold text-gray-900">Professional Information</h2>
+            <h2 className="font-semibold text-gray-900">{t('teacherApply.professional')}</h2>
             <div>
-              <Label>Subjects you can teach</Label>
+              <Label>{t('teacherApply.subjects')}</Label>
               <div className="flex flex-wrap gap-2">
                 {(subjects ?? []).map((s) => (
                   <button
@@ -201,7 +204,7 @@ export function TeacherApplyPage() {
               </div>
             </div>
             <div>
-              <Label>Grade levels</Label>
+              <Label>{t('teacherApply.gradeLevels')}</Label>
               <div className="flex flex-wrap gap-2">
                 {GRADE_LEVELS.map((g) => (
                   <button
@@ -218,7 +221,7 @@ export function TeacherApplyPage() {
               </div>
             </div>
             <div>
-              <Label>Languages you teach in</Label>
+              <Label>{t('teacherApply.languages')}</Label>
               <div className="flex flex-wrap gap-2">
                 {LANGUAGES.map((l) => (
                   <button
@@ -235,15 +238,15 @@ export function TeacherApplyPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="years">Years of experience</Label>
+              <Label htmlFor="years">{t('teacherApply.yearsExperience')}</Label>
               <Input id="years" type="number" min={0} value={form.yearsExperience} onChange={update('yearsExperience')} />
             </div>
             <div>
-              <Label htmlFor="teachingExperience">Teaching experience</Label>
+              <Label htmlFor="teachingExperience">{t('teacherApply.teachingExperience')}</Label>
               <Textarea id="teachingExperience" rows={3} value={form.teachingExperience} onChange={update('teachingExperience')} />
             </div>
             <div>
-              <Label htmlFor="educationalBackground">Educational background</Label>
+              <Label htmlFor="educationalBackground">{t('teacherApply.educationalBackground')}</Label>
               <Textarea id="educationalBackground" rows={3} value={form.educationalBackground} onChange={update('educationalBackground')} />
             </div>
           </CardBody>
@@ -251,21 +254,20 @@ export function TeacherApplyPage() {
 
         <Card>
           <CardBody className="space-y-4">
-            <h2 className="font-semibold text-gray-900">Documents</h2>
+            <h2 className="font-semibold text-gray-900">{t('teacherApply.documents')}</h2>
             <p className="text-xs text-gray-500">
-              Files are stored privately and are only ever visible to school administrators reviewing your
-              application — never shown publicly.
+              {t('teacherApply.documentsNote')}
             </p>
             <div>
-              <Label htmlFor="resume">Resume / CV</Label>
+              <Label htmlFor="resume">{t('teacherApply.resume')}</Label>
               <Input id="resume" type="file" accept=".pdf,.doc,.docx" onChange={(e) => setResume(e.target.files?.[0] ?? null)} />
             </div>
             <div>
-              <Label htmlFor="degree">Degree / certificate</Label>
+              <Label htmlFor="degree">{t('teacherApply.degree')}</Label>
               <Input id="degree" type="file" accept=".pdf,.jpg,.png" onChange={(e) => setDegree(e.target.files?.[0] ?? null)} />
             </div>
             <div>
-              <Label htmlFor="credential">Teaching credential / other certification</Label>
+              <Label htmlFor="credential">{t('teacherApply.credential')}</Label>
               <Input id="credential" type="file" accept=".pdf,.jpg,.png" onChange={(e) => setCredential(e.target.files?.[0] ?? null)} />
             </div>
           </CardBody>
@@ -273,14 +275,13 @@ export function TeacherApplyPage() {
 
         <label className="flex items-start gap-2 text-sm text-gray-600">
           <input type="checkbox" className="mt-1 rounded border-gray-300" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-          I consent to the school verifying my qualifications and processing this information for the purpose of
-          reviewing my teaching application, in line with the privacy policy.
+          {t('teacherApply.consent')}
         </label>
 
         <FieldError>{error}</FieldError>
 
         <Button type="submit" size="lg" loading={loading} className="w-full">
-          Submit Application
+          {t('teacherApply.submit')}
         </Button>
       </form>
     </div>

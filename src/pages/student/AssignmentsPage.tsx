@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { useStudentRecord } from '../../hooks/useStudentRecord'
@@ -35,6 +36,7 @@ const STATUS_TONE: Record<SubmissionStatus, 'neutral' | 'brand' | 'success' | 'w
 }
 
 export function AssignmentsPage() {
+  const { t } = useTranslation()
   const { student, loading: studentLoading } = useStudentRecord()
 
   const { data: enrollments } = useSupabaseQuery<EnrollmentRow[]>(
@@ -70,19 +72,19 @@ export function AssignmentsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Assignments</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('studentAssignments.title')}</h1>
 
       <div className="mt-6 overflow-x-auto rounded-xl border border-black/5 bg-white">
-        {(assignments ?? []).length === 0 && <EmptyState title="No assignments yet" />}
+        {(assignments ?? []).length === 0 && <EmptyState title={t('studentAssignments.empty')} />}
         {(assignments ?? []).length > 0 && (
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
-                <th className="px-4 py-3">Assignment</th>
-                <th className="px-4 py-3">Course</th>
-                <th className="px-4 py-3">Due Date</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Grade</th>
+                <th className="px-4 py-3">{t('studentAssignments.assignment')}</th>
+                <th className="px-4 py-3">{t('studentAssignments.course')}</th>
+                <th className="px-4 py-3">{t('studentAssignments.dueDate')}</th>
+                <th className="px-4 py-3">{t('studentAssignments.status')}</th>
+                <th className="px-4 py-3">{t('studentAssignments.grade')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -98,7 +100,7 @@ export function AssignmentsPage() {
                     <td className="px-4 py-3 text-gray-500">{a.courses?.title}</td>
                     <td className="px-4 py-3 text-gray-500">{a.due_date ? new Date(a.due_date).toLocaleDateString() : '—'}</td>
                     <td className="px-4 py-3">
-                      <Badge tone={STATUS_TONE[statusFor(a.id)]}>{statusFor(a.id).replace('_', ' ')}</Badge>
+                      <Badge tone={STATUS_TONE[statusFor(a.id)]}>{t(`studentAssignments.statuses.${statusFor(a.id)}`)}</Badge>
                     </td>
                     <td className="px-4 py-3 text-gray-500">{grade != null ? `${grade}/${a.max_score}` : '—'}</td>
                   </tr>

@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "courses": "Courses",
-    "teachers": "Find a Teacher",
+    "teachers": "Book a Private Lesson with a Teacher",
     "curriculum": "Curriculum",
     "islamicStudies": "Islamic Studies",
     "financialAssistance": "Financial Assistance",
@@ -10,7 +10,8 @@
     "login": "Log In",
     "register": "Create Account",
     "dashboard": "Dashboard",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "toggleMenu": "Toggle menu"
   },
   "hero": {
     "headline": "Learn. Grow. Excel.",
@@ -31,7 +32,9 @@
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "legal": "Legal",
+    "description": "Accessible academic and Islamic education through qualified teachers, flexible online learning, and financial assistance for students who need it."
   },
   "common": {
     "loading": "Loading…",
@@ -39,9 +42,174 @@
     "bookClass": "Book Class",
     "enroll": "Enroll",
     "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
     "cancel": "Cancel",
     "submit": "Submit",
     "back": "Back",
-    "next": "Next"
-  }
+    "next": "Next",
+    "placeholderNote": "This area is scaffolded (route, layout, and access control), but the full feature is a future build-out."
+  },
+  "dashboard": {"overview": "Overview", "children": "My Children", "bookings": "Bookings & Schedule", "payments": "Payments & Invoices", "messages": "Messages", "settings": "Settings", "courses": "My Courses", "assignments": "Assignments", "progress": "Progress", "signedInAs": "Signed in as", "notifications": "Notifications", "roles": {"parent": "Parent", "student": "Student", "teacher": "Teacher", "admin": "Administrator", "scholar": "Scholar"}},
+  "home": {"why": {"title": "Why Families Choose Us", "items": [{"title": "Qualified Teachers", "description": "Every teacher is verified and their credentials reviewed before they teach."}, {"title": "International Curriculum", "description": "Structured around recognized international standards with transparent credentialing."}, {"title": "Islamic Education", "description": "Qur’an, Aqeedah, Fiqh, Seerah and more, taught with scholarly oversight."}, {"title": "Live Online Classes", "description": "Interactive live sessions plus recorded lessons you can revisit anytime."}, {"title": "Financial Assistance", "description": "Families who cannot afford full tuition can apply for partial or full support."}]}, "subjects": {"title": "Subjects We Teach"}, "stepsTitle": "How It Works", "steps": ["Create an account", "Add your child", "Enroll & Start learning"], "assistance": {"title": "Financial Assistance Available", "description": "No student should miss out on a quality education because of cost. Families can apply for partial or full financial assistance; every application is reviewed individually and confidentially.", "action": "Learn About Financial Assistance"}, "featured": {"title": "Featured Recorded Courses", "viewAll": "View all", "viewCourse": "View Course", "empty": "No recorded courses published yet."}, "teacher": {"title": "Are you a qualified teacher?", "description": "Join a global community of academic and Islamic educators teaching students across the world."}, "testimonialsTitle": "What Families Say", "testimonials": [{"role": "Parent, Toronto", "quote": "My son’s Qur’an teacher is patient and genuinely cares. The scheduling around our timezone made it effortless."}, {"role": "Parent, London", "quote": "The financial assistance process was respectful and quick. My daughter never felt singled out."}, {"role": "Student, Grade 10", "quote": "I like that I can rewatch my Physics lessons before quizzes. My grades have really improved."}]},
+  "payments": {"title": "Payments & Invoices", "empty": "No invoices yet", "description": "Description", "date": "Date", "amount": "Amount", "status": "Status", "download": "Download", "statuses": {"draft": "Draft", "pending": "Pending", "paid": "Paid", "overdue": "Overdue", "void": "Void", "refunded": "Refunded"}},
+  "children": {"add": "Add a Child", "grade": "Grade {{grade}}", "academicLevel": "Academic level", "islamicEducation": "Islamic education"},
+  "courses": {"islamic": "Islamic", "academic": "Academic", "complete": "{{percent}}% complete", "continueLearning": "Continue Learning", "empty": "No courses yet", "emptyDescription": "Browse the catalogue to enroll."},
+  "teacherNav": {"classes": "Classes", "courses": "Courses", "availability": "Availability", "applicationStatus": "Application Status", "teachers": "Teachers", "students": "Students", "schedule": "Schedule", "reports": "Reports"},
+  "studentInvite": {"create": "Create Student Login", "linked": "Student login enabled", "codeLabel": "Student invitation code", "openRegistration": "Open student registration", "expires": "This one-time code expires in 24 hours."},
+  "studentRegister": {"title": "Create your student account", "subtitle": "Use the invitation code provided by your parent.", "code": "Invitation code", "create": "Create Student Account", "success": "Student account created. Confirm the email if required, then sign in.", "haveInvite": "Have a student invitation code?"},
+  "teacherCourses": {"title": "My Assigned Courses", "subtitle": "Manage learning materials for courses assigned to you by the administration.", "empty": "No courses have been assigned to you", "allLevels": "All levels"},
+  "adminStudents": {"title": "Student Management", "search": "Search students…", "empty": "No students found", "student": "Student", "grade": "Grade", "parent": "Parent"},
+  "settings": {"title": "Account Settings", "phone": "Phone", "language": "Language", "timezone": "Timezone", "saved": "Saved.", "saveChanges": "Save Changes"},
+  "booking": {"title": "Book a Private Lesson", "timezone": "Times are shown in your local timezone ({{timezone}}).", "student": "Student", "selectChild": "Select a child", "addChild": "Add a child to your profile before booking a supplemental private lesson.", "levelMatching": "Level matching for {{name}}: Grade {{grade}}", "notSet": "not set", "levelMatchingDescription": "The school curriculum is fixed. Private lessons are supplemental and matched to your child's grade and academic level.", "noGrade": "This child does not have a current grade on record. Update their profile before booking a level-matched private lesson.", "subject": "Subject", "selectSubject": "Select a level-matched subject", "selectChildFirst": "Select a child first", "noSubjects": "No supplemental subjects currently have an approved teacher for Grade {{grade}}.", "teacher": "Teacher", "selectTeacher": "Select an approved, level-matched teacher", "selectSubjectFirst": "Select a subject first", "noTeachers": "No approved teachers currently match this subject at Grade {{grade}}. Choose another subject or try again later.", "date": "Date", "time": "Time", "duration": "Duration", "minutes": "{{count}} min", "price": "Price: ${{price}} per session", "cancellation": "Cancellation policy: free cancellation up to 24 hours before the class.", "confirm": "Confirm Booking", "errors": {"completeFields": "Please complete every field before confirming.", "levelMatch": "Please choose a level-matched subject and teacher for this child.", "conflict": "This teacher already has a class scheduled at that time. Please choose another slot."}},
+  "auth": {
+    "fields": {"emailOrUsername": "Email or username", "email": "Email", "password": "Password", "firstName": "First name", "lastName": "Last name", "phone": "Phone number", "emergencyGuardianPhone": "Emergency parent/guardian phone", "country": "Country", "grade": "Grade", "academicLevel": "Academic level", "islamicEducationLevel": "Islamic education level", "preferredLanguage": "Preferred language"},
+    "errors": {"passwordLength": "Password must be at least 8 characters.", "emailRateLimit": "Too many emails were requested. Please wait a few minutes before trying again.", "generic": "Unable to complete authentication. Please try again."},
+    "login": {"welcome": "Welcome back", "subtitle": "Log in to your Al-Noor student account", "remember": "Remember me", "forgot": "Forgot password?", "newHere": "New here?", "createStudent": "Create Student Account"},
+    "register": {"title": "Create your student account", "subtitle": "Set up your learning profile to enroll and book lessons.", "existing": "Already have an account?", "checkEmail": "Account created. Check your email to confirm it, then log in."},
+    "forgot": {"title": "Reset your password", "sent": "If an account exists for {{email}}, we've sent a password reset link to it.", "action": "Send reset link", "back": "Back to login"}
+  },
+  "public": {
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": [
+        {"question": "How do live classes work?", "answer": "Classes are conducted by video conference. A Join Class button appears on your dashboard when a class is available."},
+        {"question": "Can I choose my child’s teacher?", "answer": "Yes. Search and filter teachers by subject, grade, language, gender, price and availability, then view their profile before booking."},
+        {"question": "What if we can’t afford full tuition?", "answer": "You can apply for financial assistance at any time. Applications are reviewed individually and confidentially."},
+        {"question": "Is the curriculum recognized everywhere?", "answer": "Our academic programs follow recognized international standards with transparent objectives and assessment. Recognition varies by institution and country."},
+        {"question": "How are teachers verified?", "answer": "Every teacher submits qualifications, certificates and a resume for review before approval. Documents are never public."},
+        {"question": "How is Islamic content reviewed?", "answer": "Islamic courses and materials are reviewed by a qualified Islamic scholar or reviewer before publication, in addition to standard admin oversight."}
+      ]
+    },
+    "pricing": {
+      "title": "Tuition & Payment Options", "intro": "We offer flexible tuition tiers so cost is never a barrier. A family's tuition tier is private between the family and the school.",
+      "tiers": [
+        {"name": "Standard", "price": "Full tuition", "description": "Full tuition pricing, set per teacher or course.", "features": ["Full access to booked classes", "All course materials", "Progress tracking"]},
+        {"name": "Supported", "price": "Reduced", "description": "A reduced rate for eligible students, set case-by-case.", "features": ["Same access as Standard", "Reduced rate applied automatically at checkout"]},
+        {"name": "Sponsored", "price": "Sponsor-funded", "description": "Tuition partially or fully covered through a sponsorship program.", "features": ["Same access as Standard", "Funded by school sponsorship programs"]}
+      ],
+      "assistanceTitle": "Can't afford tuition right now?", "assistanceDescription": "Apply for financial assistance — every request is reviewed individually.", "assistanceAction": "Learn About Financial Assistance"
+    },
+    "assistance": {
+      "title": "Financial Assistance", "intro": "No student should be denied a quality education because their family cannot afford full tuition. Families may request a partial fee reduction or a full fee exemption. Every application is reviewed individually and confidentially by our administration team.",
+      "cards": {"apply": {"title": "Apply", "description": "Tell us about your household situation. We only ask for what is needed to evaluate your request."}, "private": {"title": "Reviewed Privately", "description": "An administrator reviews your case individually. Your family is never publicly identified by financial status."}, "reduced": {"title": "Reduced Tuition", "description": "If approved, your reduced tuition amount is automatically applied at checkout."}},
+      "readyTitle": "Ready to apply?", "readyDescription": "You will need a parent account first so we can link the application to your child's enrollment.", "applyAction": "Apply for Assistance", "accountAction": "Create an Account First"
+    },
+    "static": {
+      "about": {"title": "About Al-Noor International School", "first": "Al-Noor International School is an online international Islamic school providing internationally transferable academic and Islamic education, taught live by qualified, verified teachers to students around the world.", "second": "Our philosophy is to provide accessible, high-quality academic and Islamic education through qualified teachers, flexible online learning, internationally transferable curricula, and financial assistance for students who need it."},
+      "contact": {"title": "Contact Us", "body": "Have a question about enrollment, teaching, or financial assistance? Reach out to our admissions team.", "email": "Email: admissions@alnoor.school"},
+      "privacy": {"title": "Privacy Policy", "first": "We collect only the information necessary to operate the platform: account details, enrollment records, class scheduling, and financial assistance details you choose to share.", "second": "Student contact information and financial details are never public. Teacher identification documents are visible only to authorized administrators. Parents can see only their own children's information."},
+      "terms": {"title": "Terms of Service", "body": "By using this platform you agree to use it respectfully, keep your account credentials secure, and provide accurate information during registration, teacher applications, and financial assistance requests."}
+    }
+  },
+  "onboarding": {
+    "title": "Add your child",
+    "subtitle": "You can add more children anytime from your dashboard.",
+    "dateOfBirth": "Date of birth",
+    "gender": "Gender",
+    "female": "Female",
+    "male": "Male",
+    "currentGrade": "Current grade/year",
+    "islamicEducationLevel": "Islamic education level",
+    "saveAddAnother": "Save & Add Another",
+    "saveDashboard": "Save & Go to Dashboard"
+  },
+  "teacherAvailability": {
+    "title": "Availability",
+    "subtitle": "Parents will see these times automatically converted to their own timezone.",
+    "weeklySlots": "Weekly Slots",
+    "empty": "No availability set yet.",
+    "addSlot": "Add Slot",
+    "removeSlot": "Remove availability slot",
+    "approvalRequired": "Your teacher account must be approved before publishing availability.",
+    "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "loadingStatistics": "Loading school statistics…",
+    "totalStudents": "Total Students",
+    "activeTeachers": "Active Teachers",
+    "pendingApplications": "Pending Applications",
+    "activeCourses": "Active Courses",
+    "upcomingClasses": "Upcoming Classes",
+    "revenuePaid": "Revenue (paid)",
+    "assistanceCasesOpen": "Assistance Cases Open",
+    "totalEnrollments": "Total Enrollments",
+    "courseManagement": "Course Management",
+    "courseRequiredFields": "Select a subject and enter a course title.",
+    "courseColor": "Course color",
+    "deleteCourseConfirm": "Delete “{{title}}”? This also removes its lessons, assignments, and enrollments.",
+    "noCourses": "No courses yet",
+    "course": "Course",
+    "status": "Status",
+    "islamicReview": "Islamic Review",
+    "unpublish": "Unpublish",
+    "approvePublish": "Approve & Publish",
+    "scheduleManagement": "Schedule Management",
+    "localTimezone": "All times shown in your local timezone ({{timezone}}).",
+    "noClasses": "No classes scheduled",
+    "class": "Class",
+    "teacher": "Teacher",
+    "when": "When",
+    "courseStatuses": {"published": "Published", "unpublished": "Unpublished", "draft": "Draft", "archived": "Archived"},
+    "reviewStatuses": {"approved": "Approved", "pending": "Pending", "rejected": "Rejected", "not_required": "Not required"},
+    "classStatuses": {"scheduled": "Scheduled", "cancelled": "Cancelled", "completed": "Completed", "rescheduled": "Rescheduled"},
+    "assistanceManagement": "Financial Assistance Management",
+    "noApplications": "No applications",
+    "parent": "Parent",
+    "close": "Close",
+    "review": "Review",
+    "householdSize": "Household size",
+    "dependents": "Dependents",
+    "incomeRange": "Income range",
+    "reason": "Reason",
+    "internalNote": "Internal note (not visible to the family)",
+    "percentReduction": "% reduction",
+    "approvePartial": "Approve Partial",
+    "approveFull": "Approve Full",
+    "scheduleInterview": "Schedule Interview",
+    "reject": "Reject",
+    "assistanceStatuses": {"submitted": "Submitted", "under_review": "Under review", "interview_scheduled": "Interview scheduled", "info_required": "Information required", "approved": "Approved", "partially_approved": "Partially approved", "rejected": "Rejected"},
+    "unknown": "Unknown",
+    "reports": "Reports",
+    "exportInvoices": "Export Invoices (CSV)",
+    "enrollmentByCourse": "Enrollment by Course",
+    "revenueSummary": "Revenue Summary",
+    "totalCollected": "Total collected across {{count}} paid invoices",
+    "createCourse": "Create Course",
+    "subject": "Subject",
+    "selectSubject": "Select a subject",
+    "title": "Title",
+    "level": "Grade / level",
+    "deliveryMode": "Delivery mode",
+    "price": "Price",
+    "description": "Description",
+    "islamicCourse": "Islamic studies course",
+    "teachers": "Assigned teachers"
+    ,"teacherManagement": "Teacher Management", "tabs": {"applications": "Applications", "teachers": "Teachers"}, "name": "Name", "email": "Email", "subjects": "Subjects", "grades": "Grades", "experience": "Experience", "languages": "Languages", "years": "{{count}} yrs", "messageApplicant": "Message to applicant (optional)", "approve": "Approve", "requestInfo": "Request More Info", "reinstate": "Reinstate", "suspend": "Suspend",
+    "applicationStatuses": {"submitted": "Submitted", "under_review": "Under review", "info_requested": "Information requested", "approved": "Approved", "rejected": "Rejected"},
+    "teacherStatuses": {"pending": "Pending", "approved": "Approved", "rejected": "Rejected", "suspended": "Suspended"}
+  },
+  "catalogue": {"title": "Course Catalogue", "subtitle": "Academic and Islamic courses, live or recorded.", "allSubjects": "All subjects", "allCategories": "Academic & Islamic", "academicOnly": "Academic only", "islamicOnly": "Islamic only", "allModes": "Live & Recorded", "loading": "Loading courses…", "empty": "No courses match your filters", "modes": {"live": "Live", "recorded": "Recorded", "hybrid": "Hybrid"}},
+  "checkout": {"title": "Checkout", "courseNotFound": "Course not found.", "selectStudentError": "Please select a student.", "alreadyEnrolled": "This student is already enrolled in this course.", "course": "Course", "price": "Price", "assistance": "Financial assistance ({{percent}}%)", "totalDue": "Total due", "demoNote": "Demo checkout — no real charge is processed. A production deployment would collect payment here through a provider such as Stripe rather than storing card details directly.", "confirmEnrollment": "Confirm Enrollment"}
+  ,"teacherSearch": {"title": "Find a Teacher", "subtitle": "Filter by subject, grade, language and more.", "subject": "Subject", "grade": "Grade", "language": "Language", "gender": "Teacher gender", "maxPrice": "Maximum price", "allSubjects": "All subjects", "allGrades": "All grades", "allLanguages": "All languages", "anyGender": "Any gender", "anyPrice": "Any price", "price15": "Up to $15/hr", "price25": "Up to $25/hr", "price40": "Up to $40/hr", "loading": "Searching teachers…", "empty": "No teachers match your filters", "emptyDescription": "Try widening your search criteria.", "locationNotSet": "Location not set", "perHour": "/hr"}
+  ,"courseDetails": {"loading": "Loading course…", "notFound": "This course could not be found or is not published.", "scholarReviewed": "Scholar Reviewed", "outline": "Course Outline", "outlineSoon": "Outline coming soon.", "hoursTotal": "{{count}} hours total", "addWishlist": "Add to Wishlist"}
+  ,"parentBookings": {"empty": "No classes booked yet", "emptyDescription": "Find a teacher and book your first class.", "forStudent": "For {{name}}", "via": "via {{provider}}", "joinClass": "Join Class"}
+  ,"assistanceApplication": {"title": "Financial Assistance Application", "intro": "We only ask for what's needed to evaluate your request. Your application is reviewed privately and never shared publicly.", "yourApplications": "Your Applications", "submitted": "Submitted {{date}}", "percentApproved": "{{percent}}% approved", "success": "Your application has been submitted. An administrator will review it and may reach out to schedule a brief interview.", "selectStudent": "Please select a student.", "numberDependents": "Number of dependents", "householdIncome": "Household income range", "situation": "Tell us about your situation", "reasonPlaceholder": "Briefly explain why you're requesting assistance.", "submit": "Submit Application", "incomeRanges": ["Under $20,000/year", "$20,000–$40,000/year", "$40,000–$60,000/year", "Over $60,000/year", "Prefer not to say"]}
+  ,
+  "studentAssignments": {"title":"Assignments","empty":"No assignments yet","assignment":"Assignment","course":"Course","dueDate":"Due Date","status":"Status","grade":"Grade","statuses":{"not_started":"Not started","in_progress":"In progress","submitted":"Submitted","graded":"Graded","late":"Late"}},
+  "assignmentSubmission": {"notFound":"Assignment not found.","uploadFailed":"File upload failed.","due":"Due {{date}}","noDueDate":"No due date","instructions":"Instructions","downloadAttachment":"Download attachment","graded":"Graded","teacherFeedback":"Teacher feedback:","alreadySubmitted":"Already submitted — resubmitting will replace your answer","yourAnswer":"Your answer","attachFile":"Attach a file (optional)","resubmit":"Resubmit","success":"Submitted successfully."},
+  "teacherClasses":{"title":"My Classes","upcoming":"Upcoming Classes","past":"Past Classes","empty":"Nothing here yet","noStudents":"No students booked yet.","attendance":{"present":"Present","absent":"Absent","late":"Late","excused":"Excused"}},
+  "teacherApplicationStatus":{"confirmEmail":"Confirm your email","confirmEmailDescription":"We've sent a confirmation link to your email. After confirming, log in to submit the rest of your application and check its status here.","loading":"Loading your application…","empty":"No application found","emptyDescription":"You haven't submitted a teacher application yet.","title":"Your Teacher Application","rejected":"Your application was not approved this time.","adminMessage":"Message from administration:","subjects":"Subjects","gradeLevels":"Grade levels","submitted":"Submitted","statuses":{"submitted":"Submitted","under_review":"Under Review","info_requested":"Info Requested","approved":"Approved"}},
+  "curriculum":{"title":"Curriculum","intro":"Our school follows a recognized international curriculum designed to support smooth transfer to universities and other institutions worldwide. Final credit or credential acceptance is determined by each receiving institution.","frameworkNote":"The framework architecture supports adding further pathways over time (e.g. IB-aligned, Cambridge-style, or local curriculum adaptations) without restructuring the platform.","grade":"Grade {{grade}}","objectives":"Objectives:","assessment":"Assessment:","credits":"{{count}} credit(s)","systemCourses":"Courses in Our School","systemCoursesDescription":"These are the courses currently offered as part of the school curriculum."},
+  "teacherProfile":{"notFound":"This teacher could not be found, or is not currently approved."},
+  "quiz":{"loading":"Loading quiz…","questions":"{{count}} question(s)","timeLimit":"{{count}} min time limit","yourScore":"Your score","submit":"Submit Quiz"},
+  "progress":{"title":"My Progress","assignment":"Assignment","courseCompletion":"Course Completion","noEnrollments":"No enrollments yet","gradedAssignments":"Graded Assignments","noGradedAssignments":"No graded assignments yet.","attendance":"Attendance","presentRate":"Present rate across {{count}} recorded class(es)"},
+  "studentDashboard":{"profileNotFound":"Your student profile could not be found.","welcome":"Welcome back, {{name}}!","nextClass":"Next Class","upcomingClasses":"Upcoming Classes","activeCourses":"Active Courses","assignmentsDue":"Assignments Due","averageProgress":"Avg. Progress","noCourses":"Not enrolled in any courses yet.","assignmentDeadlines":"Assignment Deadlines","noPendingAssignments":"No pending assignments."},
+  "courseLearning":{"loading":"Loading course…","failedToLoad":"Failed to load","completedPercent":"{{percent}}% completed","quizzes":"Quizzes","selectLesson":"Select a lesson to begin.","videoPlayer":"Video player placeholder","completed":"Completed","markComplete":"Mark as Complete","joinMeeting":"Join Course Meeting","announcements":"Course Announcements"},
+  "teacherApply":{"title":"Become a Teacher","subtitle":"Applications are reviewed by our administration team before you can start teaching.","personal":"Personal Information","professional":"Professional Information","createPassword":"Create a password","subjects":"Subjects you can teach","gradeLevels":"Grade levels","languages":"Languages you teach in","yearsExperience":"Years of experience","teachingExperience":"Teaching experience","educationalBackground":"Educational background","documents":"Documents","documentsNote":"Files are stored privately and are only ever visible to school administrators reviewing your application — never shown publicly.","resume":"Resume / CV","degree":"Degree / certificate","credential":"Teaching credential / other certification","consent":"I consent to the school verifying my qualifications and processing this information for the purpose of reviewing my teaching application, in line with the privacy policy.","submit":"Submit Application","consentRequired":"You must accept the privacy/consent notice to apply.","subjectRequired":"Select at least one subject you can teach.","submitError":"Something went wrong submitting your application."},
+  "parentDashboard":{"loading":"Loading your family…","noChildren":"No children added yet","noChildrenDescription":"Add your child's profile to start booking classes and enrolling in courses.","title":"Parent Dashboard","selectStudent":"Select Student:","upcomingClasses":"Upcoming Classes","activeCourses":"Active Courses","paymentsDue":"Payments Due","pendingPayments":"You have {{count}} payment(s) pending.","viewPayments":"View payments","noUpcomingClasses":"No upcoming classes scheduled.","assignmentAlerts":"Assignment Alerts","due":"Due {{date}}","noDeadlines":"No upcoming deadlines.","studentProgress":"{{name}}'s Progress","noCourses":"Not enrolled in any courses yet."},
+  "teacherDashboard":{"welcome":"Welcome, {{name}}","accountStatus":"Your teacher account is","approvalNote":"You'll be able to create courses and accept bookings once approved.","viewApplicationStatus":"View application status","upcomingClasses":"Upcoming Classes","earnings":"Earnings (demo)","noUpcomingClasses":"No upcoming classes."},
+  "homeTestimonials":[{"role":"Parent, Toronto","quote":"My son’s Qur’an teacher is patient and genuinely cares. The scheduling around our timezone made it effortless."},{"role":"Parent, London","quote":"The financial assistance process was respectful and quick. My daughter never felt singled out."},{"role":"Student, Grade 10","quote":"I like that I can rewatch my Physics lessons before quizzes. My grades have really improved."}],
+  "teacherCourseEditor":{"notAssigned":"This course is unavailable or has not been assigned to you.","subtitle":"Add learning materials and communicate with enrolled students.","meeting":"Course Meeting","currentMeeting":"Open current meeting link","meetingPlaceholder":"Meeting URL","modules":"Modules & Lessons","moduleTitle":"New module title","addModule":"Add Module","addLesson":"Add Lesson","selectModule":"Select a module","text":"Text","video":"Video","link":"Link","lessonTitle":"Lesson title","lessonContent":"Lesson content","url":"URL","announcements":"Announcements","announcementPlaceholder":"Write a course announcement","postAnnouncement":"Post Announcement"}
 }

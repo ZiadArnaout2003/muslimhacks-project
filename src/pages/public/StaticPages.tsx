@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 function StaticPage({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -10,55 +11,40 @@ function StaticPage({ title, children }: { title: string; children: ReactNode })
 }
 
 export function AboutPage() {
+  const { t } = useTranslation()
   return (
-    <StaticPage title="About Al-Noor International School">
-      <p>
-        Al-Noor International School is an online international Islamic school providing both internationally
-        transferable academic education and Islamic education, taught live by qualified, verified teachers to
-        students around the world.
-      </p>
-      <p>
-        Our philosophy: provide accessible, high-quality academic and Islamic education through qualified
-        teachers, flexible online learning, internationally transferable curricula, and financial assistance for
-        students who need it.
-      </p>
+    <StaticPage title={t('public.static.about.title')}>
+      <p>{t('public.static.about.first')}</p>
+      <p>{t('public.static.about.second')}</p>
     </StaticPage>
   )
 }
 
 export function ContactPage() {
+  const { t } = useTranslation()
   return (
-    <StaticPage title="Contact Us">
-      <p>Have a question about enrollment, teaching, or financial assistance? Reach out to our admissions team.</p>
-      <p>Email: admissions@alnoor.school</p>
+    <StaticPage title={t('public.static.contact.title')}>
+      <p>{t('public.static.contact.body')}</p>
+      <p>{t('public.static.contact.email')}</p>
     </StaticPage>
   )
 }
 
 export function PrivacyPage() {
+  const { t } = useTranslation()
   return (
-    <StaticPage title="Privacy Policy">
-      <p>
-        We collect only the information necessary to operate the platform: account details, enrollment records,
-        class scheduling, and — where relevant — financial assistance details you choose to share with us.
-      </p>
-      <p>
-        Student contact information and financial details are never made public. Teacher identification
-        documents are visible only to authorized administrators. Access to family data is restricted so that
-        parents can only see their own children's information.
-      </p>
+    <StaticPage title={t('public.static.privacy.title')}>
+      <p>{t('public.static.privacy.first')}</p>
+      <p>{t('public.static.privacy.second')}</p>
     </StaticPage>
   )
 }
 
 export function TermsPage() {
+  const { t } = useTranslation()
   return (
-    <StaticPage title="Terms of Service">
-      <p>
-        By using this platform you agree to use it respectfully, to keep your account credentials secure, and to
-        provide accurate information during registration, teacher applications, and financial assistance
-        requests.
-      </p>
+    <StaticPage title={t('public.static.terms.title')}>
+      <p>{t('public.static.terms.body')}</p>
     </StaticPage>
   )
 }

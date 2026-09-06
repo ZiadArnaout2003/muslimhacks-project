@@ -1,4 +1,5 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
 import { useStudentRecord } from '../../hooks/useStudentRecord'
@@ -22,6 +23,7 @@ interface AttendanceRow {
 }
 
 export function ProgressPage() {
+  const { t } = useTranslation()
   const { student, loading: studentLoading } = useStudentRecord()
 
   const { data: enrollments } = useSupabaseQuery<EnrollmentWithCourse[]>(
@@ -53,7 +55,7 @@ export function ProgressPage() {
   if (studentLoading) return <LoadingState />
 
   const gradeChartData = (submissions ?? []).map((s) => ({
-    name: s.assignments?.title.slice(0, 14) ?? 'Assignment',
+    name: s.assignments?.title.slice(0, 14) ?? t('progress.assignment'),
     grade: s.grade,
     max: s.assignments?.max_score ?? 100,
   }))
@@ -67,11 +69,11 @@ export function ProgressPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">My Progress</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('progress.title')}</h1>
 
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Course Completion</h2>
+          <h2 className="font-semibold text-gray-900">{t('progress.courseCompletion')}</h2>
           <div className="mt-4 space-y-3">
             {(enrollments ?? []).map((e) => (
               <div key={e.id}>
@@ -84,16 +86,16 @@ export function ProgressPage() {
                 </div>
               </div>
             ))}
-            {(enrollments ?? []).length === 0 && <EmptyState title="No enrollments yet" />}
+            {(enrollments ?? []).length === 0 && <EmptyState title={t('progress.noEnrollments')} />}
           </div>
         </CardBody>
       </Card>
 
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Graded Assignments</h2>
+          <h2 className="font-semibold text-gray-900">{t('progress.gradedAssignments')}</h2>
           {gradeChartData.length === 0 ? (
-            <p className="mt-3 text-sm text-gray-500">No graded assignments yet.</p>
+            <p className="mt-3 text-sm text-gray-500">{t('progress.noGradedAssignments')}</p>
           ) : (
             <div className="mt-4 h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -112,9 +114,9 @@ export function ProgressPage() {
 
       <Card>
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Attendance</h2>
+          <h2 className="font-semibold text-gray-900">{t('progress.attendance')}</h2>
           <p className="mt-2 text-3xl font-bold text-brand-700">{presentRate != null ? `${presentRate}%` : '—'}</p>
-          <p className="text-xs text-gray-500">Present rate across {totalAttendance} recorded class(es)</p>
+          <p className="text-xs text-gray-500">{t('progress.presentRate', { count: totalAttendance })}</p>
         </CardBody>
       </Card>
     </div>

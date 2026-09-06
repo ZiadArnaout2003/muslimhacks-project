@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import { useSupabaseQuery } from '../../hooks/useSupabaseQuery'
@@ -12,6 +13,7 @@ import { LoadingState, ErrorState } from '../../components/ui/States'
 import type { Assignment, Submission } from '../../types/database'
 
 export function AssignmentSubmissionPage() {
+  const { t } = useTranslation()
   const { assignmentId = '' } = useParams()
   const { student } = useStudentRecord()
 
@@ -36,7 +38,7 @@ export function AssignmentSubmissionPage() {
 
   if (loading || subLoading) return <LoadingState />
   if (error) return <ErrorState message={error} />
-  if (!assignment) return <ErrorState message="Assignment not found." />
+  if (!assignment) return <ErrorState message={t('assignmentSubmission.notFound')} />
 
   const isGraded = submission?.status === 'graded'
   const isPastDue = assignment.due_date ? new Date(assignment.due_date) < new Date() : false
@@ -52,7 +54,7 @@ export function AssignmentSubmissionPage() {
         fileUrl = await uploadAssignmentFile(student.id, file)
       } catch (err) {
         setSubmitting(false)
-        setSubmitError(err instanceof Error ? err.message : 'File upload failed.')
+        setSubmitError(err instanceof Error ? err.message : t('assignmentSubmission.uploadFailed'))
         return
       }
     }
@@ -81,15 +83,15 @@ export function AssignmentSubmissionPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-bold text-gray-900">{assignment.title}</h1>
-      <p className="mt-1 text-sm text-gray-500">Due {assignment.due_date ? new Date(assignment.due_date).toLocaleString() : 'No due date'}</p>
+      <p className="mt-1 text-sm text-gray-500">{t('assignmentSubmission.due', { date: assignment.due_date ? new Date(assignment.due_date).toLocaleString() : t('assignmentSubmission.noDueDate') })}</p>
 
       <Card className="mt-6">
         <CardBody>
-          <h2 className="font-semibold text-gray-900">Instructions</h2>
+          <h2 className="font-semibold text-gray-900">{t('assignmentSubmission.instructions')}</h2>
           <p className="mt-2 whitespace-pre-line text-sm text-gray-600">{assignment.instructions}</p>
           {assignment.attachment_url && (
             <a href={assignment.attachment_url} className="mt-2 inline-block text-sm text-brand-600 hover:underline">
-              Download attachment
+              {t('assignmentSubmission.downloadAttachment')}
             </a>
           )}
         </CardBody>
@@ -99,13 +101,13 @@ export function AssignmentSubmissionPage() {
         <CardBody className="space-y-4">
           {isGraded ? (
             <div>
-              <Badge tone="success">Graded</Badge>
+              <Badge tone="success">{t('assignmentSubmission.graded')}</Badge>
               <p className="mt-2 text-2xl font-bold text-gray-900">
                 {submission?.grade}/{assignment.max_score}
               </p>
               {submission?.feedback && (
                 <div className="mt-3 rounded-lg bg-gray-50 p-3 text-sm text-gray-700">
-                  <p className="font-medium">Teacher feedback:</p>
+                  <p className="font-medium">{t('assignmentSubmission.teacherFeedback')}</p>
                   <p>{submission.feedback}</p>
                 </div>
               )}
@@ -113,21 +115,21 @@ export function AssignmentSubmissionPage() {
           ) : (
             <>
               {submission?.status === 'submitted' && !justSubmitted && (
-                <Badge tone="warning">Already submitted — resubmitting will replace your answer</Badge>
+                <Badge tone="warning">{t('assignmentSubmission.alreadySubmitted')}</Badge>
               )}
               <div>
-                <Label htmlFor="answer">Your answer</Label>
+                <Label htmlFor="answer">{t('assignmentSubmission.yourAnswer')}</Label>
                 <Textarea id="answer" rows={6} defaultValue={submission?.answer_text ?? ''} onChange={(e) => setAnswerText(e.target.value)} />
               </div>
               <div>
-                <Label htmlFor="file">Attach a file (optional)</Label>
+                <Label htmlFor="file">{t('assignmentSubmission.attachFile')}</Label>
                 <Input id="file" type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
               </div>
               <FieldError>{submitError}</FieldError>
               <Button loading={submitting} onClick={handleSubmit}>
-                {submission ? 'Resubmit' : 'Submit'}
+                {submission ? t('assignmentSubmission.resubmit') : t('common.submit')}
               </Button>
-              {justSubmitted && <p className="text-sm text-emerald-700">Submitted successfully.</p>}
+              {justSubmitted && <p className="text-sm text-emerald-700">{t('assignmentSubmission.success')}</p>}
             </>
           )}
         </CardBody>
